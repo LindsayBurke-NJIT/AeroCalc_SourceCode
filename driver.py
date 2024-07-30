@@ -9,13 +9,13 @@
 
 from tkinter import *
 from tkinter import ttk
-import tailTab1_support_functions, tailTab2_support_functions, elecTab1_support_functions
+import tailTab1_support_functions, tailTab2_support_functions, elecTab1_support_functions, empty
 
 #root config
 root = Tk()
 root.title("NJIT Flylanders™ AeroCalc")
 canvas = Canvas()
-root.geometry('620x540')
+root.geometry('620x545')
 root.resizable(False, False)
 
 #Change color/font styles here
@@ -38,19 +38,15 @@ myTheme.theme_create( "myTheme", settings={
 myTheme.theme_use("myTheme")
 tabControl = ttk.Notebook(root)
 
-def destroyTabs():
+def destroyTabs() -> None:
     '''Destroys the currently open tabs'''
     for item in tabControl.winfo_children():
         item.destroy()
 
-def wingActivate():
+def wingActivate() -> None:
     '''Show tabs for wing and tail subteam calculators'''
-    destroyTabs()
+    tab1 = setupWindow(wingBtn)
 
-    resetButtonColors()
-    activateButtonColor(wingBtn)
-
-    tab1 = Frame(tabControl, width=565, height=550, bg=colorSelection)
     tab2 = Frame(tabControl, width=565, height=550, bg=colorSelection)
 
     tabControl.add(tab1, text ='Volume Ratio', state=NORMAL)
@@ -60,16 +56,12 @@ def wingActivate():
     tailTab1_support_functions.constructTab(tab1, colorSelection, fontName, bgThickness)
     tailTab2_support_functions.constructTab(tab2, colorSelection, fontName)
 
-def homeActivate():
+def homeActivate() -> None:
     '''Display home page'''
     global aeroLogo #declared PhotoImage as global to avoid garbage collection
-    
-    destroyTabs()
+    tab1 = setupWindow(homeBtn)
 
-    resetButtonColors()
-    activateButtonColor(homeBtn)
-
-    tab1 = Frame(tabControl, width=580, height=525, bg=colorSelection)
+    #Tab 1
     tabControl.add(tab1, text="Home", state=NORMAL)
     tabControl.grid(column=1, row=0, sticky='nsew')
     homeTitle = Label(tab1, text="Flylanders™ AeroCalc", bg=colorSelection, font="Roboto 20 bold")
@@ -91,14 +83,9 @@ def homeActivate():
     versionText = Label(tab1, font="Roboto 10", bg=colorSelection, text="v1.0.0")
     versionText.grid(row=4, column=1, sticky='se', padx=(0, 30), pady=(60, 0))
 
-def electronicsActivate():
+def electronicsActivate() -> None:
     '''Display electronics calculators'''
-    destroyTabs()
-
-    resetButtonColors()
-    activateButtonColor(electronicsBtn)
-
-    tab1 = Frame(tabControl, width=680, height=600, bg=colorSelection)
+    tab1 = setupWindow(electronicsBtn)
 
     '''
     Tab 1 -- Thrust Stand Data Visualization
@@ -108,6 +95,20 @@ def electronicsActivate():
 
     elecTab1_support_functions.constructTab(tab1, colorSelection, fontName)
 
+def landgearActivate() -> None:
+    '''Display landing gear calculators'''
+    tab1 = setupWindow(landgearBtn)
+    empty.initEmpty(tabControl, tab1, fontName, colorSelection)
+
+def fuselageActivate() -> None:
+    '''Display fuselage calculators'''
+    tab1 = setupWindow(fuselageBtn)
+    empty.initEmpty(tabControl, tab1, fontName, colorSelection)
+
+def miscActivate() -> None:
+    tab1 = setupWindow(miscBtn)
+    empty.initEmpty(tabControl, tab1, fontName, colorSelection)
+
 #Add buttons to navigate between the different subteams
 buttons = Frame(root, width=200, height=1000, bg="lightgray")
 buttons.grid(row=0, column=0, sticky='n')
@@ -115,19 +116,22 @@ buttonColor = "#b40707"
 buttonText = "Roboto 12 bold"
 reliefStyle="solid"
 buttonTextColor = "black"
+buttonHeight = 4
 
-homeBtn = Button(buttons, text="Home", command=homeActivate, font=buttonText, height=5, bg=buttonColor, relief=reliefStyle, fg=buttonTextColor)
+homeBtn = Button(buttons, text="Home", command=homeActivate, font=buttonText, height=buttonHeight, bg=buttonColor, relief=reliefStyle, fg=buttonTextColor)
 homeBtn.grid(row=0, column=0, sticky='new')
-wingBtn = Button(buttons, text="Wing/Tail", command=wingActivate, font=buttonText, height=5, bg=buttonColor, relief=reliefStyle, fg=buttonTextColor)
+wingBtn = Button(buttons, text="Wing/Tail", command=wingActivate, font=buttonText, height=buttonHeight, bg=buttonColor, relief=reliefStyle, fg=buttonTextColor)
 wingBtn.grid(row=1, column=0, sticky='new')
-electronicsBtn = Button(buttons, text="Electronics", command=electronicsActivate, font=buttonText, height=5, bg=buttonColor, relief=reliefStyle, fg=buttonTextColor)
+electronicsBtn = Button(buttons, text="Electronics", command=electronicsActivate, font=buttonText, height=buttonHeight, bg=buttonColor, relief=reliefStyle, fg=buttonTextColor)
 electronicsBtn.grid(row=2, column=0, sticky='new')
-landgearBtn = Button(buttons, text="Landing\nGear", font=buttonText, height=5, bg=buttonColor, relief=reliefStyle, fg=buttonTextColor)
+landgearBtn = Button(buttons, text="Landing\nGear", command=landgearActivate, font=buttonText, height=buttonHeight, bg=buttonColor, relief=reliefStyle, fg=buttonTextColor)
 landgearBtn.grid(row=3, column=0, sticky='new')
-fuselageBtn = Button(buttons, text="Fuselage", font=buttonText, height=5, bg=buttonColor, relief=reliefStyle, fg=buttonTextColor)
+fuselageBtn = Button(buttons, text="Fuselage", command=fuselageActivate, font=buttonText, height=buttonHeight, bg=buttonColor, relief=reliefStyle, fg=buttonTextColor)
 fuselageBtn.grid(row=4, column=0, sticky='new')
+miscBtn = Button(buttons, text="Misc.", command=miscActivate, font=buttonText, height=buttonHeight, bg=buttonColor, relief=reliefStyle, fg=buttonTextColor)
+miscBtn.grid(row=5, column=0, sticky='new')
 
-buttonList = [homeBtn, wingBtn, electronicsBtn, landgearBtn]
+buttonList = [homeBtn, wingBtn, electronicsBtn, landgearBtn, miscBtn, fuselageBtn]
 def resetButtonColors() -> None:
     '''Set the buttons for changing the tabs back to their original color before they were the active window'''
     for button in buttonList:
@@ -136,6 +140,17 @@ def resetButtonColors() -> None:
 def activateButtonColor(activeButton: Button) -> None:
     '''Sets the button to the active window colors'''
     activeButton.config(fg="white", bg="black")
+
+def setupWindow(currBtn: Button) -> Frame:
+    '''Call the proper functions to clear out the last tab and setup the current one.
+        This returns the first tab as a Frame.
+    '''
+    destroyTabs()
+    resetButtonColors()
+    activateButtonColor(currBtn)
+
+    tab1 = Frame(tabControl, width=620, height=545, bg=colorSelection)
+    return tab1
 
 root.config(bg=colorSelection)
 
