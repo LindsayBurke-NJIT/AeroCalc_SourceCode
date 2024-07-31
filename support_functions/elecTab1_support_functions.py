@@ -1,14 +1,12 @@
-#########################################################
-# Description: Support functions for the Electronics
-#              subteam's automated thrust stand data 
-#              visualization program
-#########################################################
+'''Tab 1 -- automated thrust stand data visualization program'''
 
 from tkinter import filedialog
 import pandas as pd
 from tkinter import *
 import os
 import matplotlib.pyplot as plt
+import matplotlib.patches as patch
+import numpy as np
 
 def constructTab(tab1: Frame, colorSelection:str, fontName: str):
     buttonColor = "gray"
@@ -136,7 +134,7 @@ def readFiles(filesToRead: list, maxThrust: dict, root, dropDownUnits: str, erro
             rankNumber+=1
 
         #Call graphing function
-        generatePlot(filesToPlot, dropDownUnits, sheetColNames)
+        generatePlot(filesToPlot, dropDownUnits, sheetColNames, maxIndex)
     except:
         errorText.config(text="Error: No column found for thrust with the following units: "+dropDownUnits
                          +"\nCheck that you selected the correct units."+
@@ -145,16 +143,23 @@ def readFiles(filesToRead: list, maxThrust: dict, root, dropDownUnits: str, erro
         for row in range(len(rankRows)):
             rankRows[row].config(text="")
 
-def generatePlot(filesArray: dict, units: str, sheetNames: list[str]) -> None:
+def generatePlot(filesArray: dict, units: str, sheetNames: list[str], maxIndex: int) -> None:
     '''Produces a plot of thrust vs power from pandas DataFrame object'''
-    rowName = sheetNames[0]
-    colName = sheetNames[1]
+    thrust = sheetNames[0]
+    power = sheetNames[1]
 
+    colorArr = []
+    patchesArr = []
+    index=0
     for spreadsheet in filesArray.values():
-        plt.plot(spreadsheet[colName], spreadsheet[rowName], linewidth=.5)
+        myPlot = plt.plot((spreadsheet[power])[:maxIndex], (spreadsheet[thrust])[:maxIndex], linewidth=.5)
+        currColor = myPlot[0].get_color()
         plt.xlabel("Power (W)")
         plt.ylabel("Thrust ("+units+")")
-    plt.legend(filesArray.keys(), loc="lower right")
+        patchesArr.append(patch.Patch(color=currColor, label=list(filesArray.keys())[index]))
+        index+=1
+    plt.grid()
+    plt.legend(filesArray.keys(), loc="lower right", handles=patchesArr)
 
 def downloadPlot(errorLabel: Label) -> None:
     '''Downloads the generated plot to the user's device'''
