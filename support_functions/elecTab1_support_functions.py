@@ -82,6 +82,7 @@ def readFiles(filesToRead: list, maxThrust: dict, root, dropDownUnits: str, erro
     filesToPlot = {} #stores files to plot and its corresponding plot label
     sheetColNames = ['Thrust ('+dropDownUnits+')', 'Electrical Power (W)']
     maxThrust.clear() #clear list from last plot
+    maxIndices = []
 
     try:
         for file in filesToRead:
@@ -95,6 +96,7 @@ def readFiles(filesToRead: list, maxThrust: dict, root, dropDownUnits: str, erro
 
                     maxVal = max(currCsv[sheetColNames[0]])
                     maxIndex = currCsv[sheetColNames[0]].idxmax()
+                    maxIndices.append(maxIndex)
                     powerColIndex = currCsv.columns.get_loc(sheetColNames[1])
                     powerAtMax = currCsv.iloc[maxIndex, powerColIndex]
 
@@ -134,7 +136,7 @@ def readFiles(filesToRead: list, maxThrust: dict, root, dropDownUnits: str, erro
             rankNumber+=1
 
         #Call graphing function
-        generatePlot(filesToPlot, dropDownUnits, sheetColNames, maxIndex)
+        generatePlot(filesToPlot, dropDownUnits, sheetColNames, maxIndices)
     except:
         errorText.config(text="Error: No column found for thrust with the following units: "+dropDownUnits
                          +"\nCheck that you selected the correct units."+
@@ -143,23 +145,25 @@ def readFiles(filesToRead: list, maxThrust: dict, root, dropDownUnits: str, erro
         for row in range(len(rankRows)):
             rankRows[row].config(text="")
 
-def generatePlot(filesArray: dict, units: str, sheetNames: list[str], maxIndex: int) -> None:
+def generatePlot(filesArray: dict, units: str, sheetNames: list[str], maxIndices: list[int]) -> None:
     '''Produces a plot of thrust vs power from pandas DataFrame object'''
     thrust = sheetNames[0]
     power = sheetNames[1]
 
-    colorArr = []
     patchesArr = []
     index=0
     for spreadsheet in filesArray.values():
-        myPlot = plt.plot((spreadsheet[power])[:maxIndex], (spreadsheet[thrust])[:maxIndex], linewidth=.5)
+        x = (spreadsheet[power])[:maxIndices[index]]
+        y = (spreadsheet[thrust])[:maxIndices[index]]
+        print(x, y)
+        myPlot = plt.plot(x, y, linewidth=.5)
         currColor = myPlot[0].get_color()
         plt.xlabel("Power (W)")
         plt.ylabel("Thrust ("+units+")")
         patchesArr.append(patch.Patch(color=currColor, label=list(filesArray.keys())[index]))
         index+=1
     plt.grid()
-    plt.legend(filesArray.keys(), loc="lower right", handles=patchesArr)
+    plt.legend(loc="lower right", handles=patchesArr)
 
 def downloadPlot(errorLabel: Label) -> None:
     '''Downloads the generated plot to the user's device'''
