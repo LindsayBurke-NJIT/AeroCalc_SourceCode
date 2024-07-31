@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patch
 import numpy as np
 
-def constructTab(tab1: Frame, colorSelection:str, fontName: str):
+def constructTab(tab1: Frame, colorSelection:str, fontName: str) -> None:
     buttonColor = "gray"
     buttonTextColor = "black"
 
@@ -155,7 +155,6 @@ def generatePlot(filesArray: dict, units: str, sheetNames: list[str], maxIndices
     for spreadsheet in filesArray.values():
         x = (spreadsheet[power])[:maxIndices[index]]
         y = (spreadsheet[thrust])[:maxIndices[index]]
-        print(x, y)
         myPlot = plt.plot(x, y, linewidth=.5)
         currColor = myPlot[0].get_color()
         plt.xlabel("Power (W)")

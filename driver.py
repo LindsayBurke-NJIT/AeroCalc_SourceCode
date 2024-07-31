@@ -12,6 +12,7 @@ from tkinter import ttk
 import support_functions.tailTab1_support_functions as tailTab1
 import support_functions.tailTab2_support_functions as tailTab2
 import support_functions.elecTab1_support_functions as elecTab1
+import support_functions.miscTab1_support_functions as miscTab1
 import support_functions.empty as empty
 
 #root config
@@ -109,7 +110,10 @@ def fuselageActivate() -> None:
 
 def miscActivate() -> None:
     tab1 = setupWindow("Misc")
-    empty.initEmpty(tabControl, tab1, fontName, colorSelection)
+    tabControl.add(tab1, text="Competition Scoring", state=NORMAL)
+    tabControl.grid(column=1, row=0, sticky='nsew')
+
+    miscTab1.constructTab(tab1, colorSelection, fontName)
 
 #Buttons setup
 buttons = Frame(root, width=100, height=1000, bg="lightgray")
@@ -129,6 +133,7 @@ def createButton(btnName: str, funName, btnText: str):
     buttonList[btnName] = currBtn
     rowNum+=1
 
+#createButton(button name, function, text to display)
 createButton("Home", homeActivate, "Home")
 createButton("Tail", tailActivate, "Wing/Tail")
 createButton("Electronics", electronicsActivate, "Electronics")

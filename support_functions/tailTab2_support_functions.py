@@ -4,7 +4,7 @@ from tkinter import *
 def constructTab(tab2: Frame, colorSelection: str, fontName: str) -> None:
     '''Creates all of the Tkinter widgets'''
     #Defines all labels, buttons, and input boxes
-    ttlLabel = Label(tab2, text="Aspect Ratio, Area, and Taper Ratio Calculator\n", bg=colorSelection, font=fontName+" 15 bold", justify=CENTER).grid(row=0, column=0,columnspan=4)
+    ttlLabel = Label(tab2, text="Aspect Ratio, Area, and Taper Ratio Calculator\n", bg=colorSelection, font=fontName+" 15 bold", justify=CENTER).grid(row=0, column=0,columnspan=4, padx=(40,0))
     tipChordLabel = Label(tab2, text="Tip Chord", bg=colorSelection, font=fontName+" 13 bold").grid(row=1, column=2)
     tipChordInput = Entry(tab2)
     tipChordInput.grid(row=1, column=3)
