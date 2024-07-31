@@ -3,4 +3,4 @@ Welcome to AeroCalc, created by and for the NJIT Flylanders™ SAE Aero Design T
 This program is a compilation of calculators and tools used by each of our subteams to design our competition RC plane.
 
 <h2>User Interface</h2>
-![image](https://github.com/user-attachments/assets/add64dca-d655-43b9-931e-fb3b792a8a72)
+![HomePage](screenshots/uiHome.png)
