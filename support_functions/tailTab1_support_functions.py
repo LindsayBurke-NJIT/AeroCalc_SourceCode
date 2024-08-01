@@ -133,9 +133,10 @@ def clearOutput(outputBox: Text) -> None:
 
 def setValues(clicked: StringVar, outputBox: Text,
               wingInput, chordInput, tailInput, lengthInput,
-              vTailInput, vLengthInput, wingSpanInput):
+              vTailInput, vLengthInput, wingSpanInput) -> bool:
     '''This function takes user entered values from the input boxes
-    and assigns to vars for ease of calculations
+    and assigns to vars for ease of calculations. Returns boolean that
+    is True when the values are correctly set, and False otherwise.
     '''
     try:
         global wingArea,chord,tailArea,myLength,vTailArea,vLength,wingSpan
@@ -149,39 +150,40 @@ def setValues(clicked: StringVar, outputBox: Text,
             vLength = float(vLengthInput.get())
             wingSpan = float(wingSpanInput.get())
             wingArea = float(wingInput.get())
-    except ValueError:
-        outputBox.configure(state=NORMAL)
-        outputBox.insert("1.0", "Error: Value is invalid.\n")
-        outputBox.configure(state=DISABLED)
+        return True
+    except:
+        return False
+
+def addError(outputBox: Text, e: str):
+    outputBox.configure(state=NORMAL)
+    outputBox.tag_configure("redText", foreground="red")
+    outputBox.insert("1.0", f"Error: {e}\n", "redText")
+    outputBox.configure(state=DISABLED)
+
+def addAnswer(outputBox: Text, ans: float):
+    outputBox.configure(state=NORMAL, fg="black")
+    outputBox.insert("1.0", str(ans)+"\n")
+    outputBox.configure(state=DISABLED)
 
 def submitAll(clicked: StringVar, outputBox: Text, wingInput: Text, chordInput: Text, tailInput: Text,
               lengthInput: Text, vTailInput: Text, vLengthInput: Text, wingSpanInput: Text) -> int:
     '''Calculates volume ratio, outputs calculation to widget, and 
     returns the volume ratio as an integer'''
-    setValues(clicked, outputBox, wingInput, chordInput, tailInput, lengthInput,
+    isSet = setValues(clicked, outputBox, wingInput, chordInput, tailInput, lengthInput,
               vTailInput, vLengthInput, wingSpanInput)
-    try:
-        if(clicked.get()=="Horizontal"):
-            outputBox.configure(state=NORMAL)
-            h_volumeRatio = (tailArea*myLength)/(wingArea*chord) #Calculates the volume ratio for horizontal stabilizer
-            outputBox.insert("1.0", str(h_volumeRatio) + '\n')
-            outputBox.configure(state=DISABLED)
-            return h_volumeRatio
-        elif(clicked.get()=="Vertical"):
-            outputBox.configure(state=NORMAL)
-            v_volumeRatio = (vTailArea*vLength)/(wingArea*wingSpan) #Calculates the volume ratio for vertical stabilizer
-            outputBox.insert("1.0", str(v_volumeRatio) + '\n')
-            outputBox.configure(state=DISABLED)
-            return v_volumeRatio
-    except ZeroDivisionError:
-        outputBox.configure(state=NORMAL)
-        outputBox.insert("1.0", "Error: Division by Zero\n")
-        outputBox.configure(state=DISABLED)
-    except ValueError:
-        outputBox.configure(state=NORMAL)
-        outputBox.insert("1.0", "Error: Incorrect entry\n")
-        outputBox.configure(state=DISABLED)
-    except NameError:
-        outputBox.configure(state=NORMAL)
-        outputBox.insert("1.0", "Error: Incorrect entry\n")
-        outputBox.configure(state=DISABLED)
+    if(isSet):
+        try:
+            if(clicked.get()=="Horizontal"):
+                outputBox.configure(state=NORMAL)
+                h_volumeRatio = (tailArea*myLength)/(wingArea*chord) #Calculates the volume ratio for horizontal stabilizer
+                addAnswer(outputBox, h_volumeRatio)
+                return h_volumeRatio
+            elif(clicked.get()=="Vertical"):
+                outputBox.configure(state=NORMAL)
+                v_volumeRatio = (vTailArea*vLength)/(wingArea*wingSpan) #Calculates the volume ratio for vertical stabilizer
+                addAnswer(outputBox, v_volumeRatio)
+                return v_volumeRatio
+        except ZeroDivisionError:
+            addError(outputBox, "Division by Zero")
+    else:
+        addError(outputBox, "Incorrect input")

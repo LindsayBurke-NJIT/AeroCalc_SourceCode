@@ -42,7 +42,6 @@ def calcFS(pPayInput: Entry, wingspanInput: Entry, w1Input: Entry, w2Input: Entr
     Calculates flight score for each flight
     '''
     try:
-        clrError(outputBox)
         weightList = setVals(pPayInput, wingspanInput, w1Input, w2Input, w3Input, outputBox)
         if(weightList==False):
             return False
@@ -57,6 +56,7 @@ def calcFS(pPayInput: Entry, wingspanInput: Entry, w1Input: Entry, w2Input: Entr
             finalFs+=currFlightScore
         finalFs+=wingScore
 
+        clrError(outputBox)
         outputBox.configure(state=NORMAL, fg="black")
         outputBox.insert("1.0", str(finalFs)+"\n")
         outputBox.configure(state=DISABLED)
@@ -94,19 +94,6 @@ def setVals(pPayInput: Entry, wingspanInput: Entry, w1Input: Entry, w2Input: Ent
             addError(outputBox, "Values cannot be negative\n")
             return False
         return (w1, w2, w3)
-    except ValueError:
-        clrError(outputBox)
-        outputBox.configure(state=NORMAL, fg="red")
-        outputBox.insert("1.0", "Please enter numerical values only\n")
-        outputBox.configure(state=DISABLED)
-    except TypeError:
-        clrError()
-        outputBox.configure(state=NORMAL, fg="red")
-        outputBox.insert("1.0", "Please enter numerical values only\n")
-        outputBox.configure(state=DISABLED)
     except:
-        clrError()
-        outputBox.configure(state=NORMAL, fg="red")
-        outputBox.insert("1.0", "Please enter numerical values only\n")
-        outputBox.configure(state=DISABLED)
-    return False
+        addError(outputBox, "Please enter numerical values only\n")
+        return False

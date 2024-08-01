@@ -38,7 +38,7 @@ def constructTab(tab1: Frame, colorSelection:str, fontName: str) -> None:
     startPlotButton.grid(row=3, column=1, columnspan=2, pady=10, padx=(100, 0), sticky='w')
 
     downloadPlotsButton = Button(tab1, text="Download", bg="black", fg="white", width=10, height=1, wraplength=100, command=lambda: downloadPlot(errorText))
-    downloadPlotsButton.grid(row=3, column=2, padx=(250, 15), sticky='w')
+    downloadPlotsButton.grid(row=3, column=2, padx=(250, 40), sticky='w')
 
     rankingTextLabel = Label(tab1, text="Propeller Ranking:", font=fontName+" 15 bold", bg=colorSelection)
     rankingTextLabel.grid(row=4, column=1, columnspan=2, sticky='nsw', pady=20, padx=150)
