@@ -10,10 +10,10 @@
 from tkinter import *
 from tkinter import ttk
 import support_functions.tailTab1_support_functions as tailTab1
-import support_functions.tailTab2_support_functions as tailTab2
 import support_functions.elecTab1_support_functions as elecTab1
 import support_functions.miscTab1_support_functions as miscTab1
 import support_functions.homepage_support_functions as homepage
+import support_functions.wingTab1_support_functions as wingTab1
 import support_functions.empty as empty
 
 #root config
@@ -21,8 +21,8 @@ root = Tk()
 root.title("NJIT Flylanders™ AeroCalc")
 canvas = Canvas()
 windowWidth = 640
-windowHeight=540
-root.geometry(f'{windowWidth}x{windowHeight}'.format())
+windowHeight=630
+root.geometry(f'{windowWidth}x{windowHeight}')
 root.resizable(False, False)
 
 try:
@@ -50,23 +50,27 @@ def destroyTabs() -> None:
     for item in tabControl.winfo_children():
         item.destroy()
 
+def wingActivate() -> None:
+    '''Display tabs for tail subteam calculators'''
+    tab1 = setupWindow("Wing")
+    tabControl.add(tab1, text="Aspect/Taper Ratio", state=NORMAL)
+    tabControl.grid(column=1, row=0, sticky='nsew')
+
+    wingTab1.constructTab(tab1, colorSelection, fontName)
+
 def tailActivate() -> None:
-    '''Show tabs for wing and tail subteam calculators'''
+    '''Display tabs for tail subteam calculators'''
     tab1 = setupWindow("Tail")
-    tab2 = Frame(tabControl, width=565, height=550, bg=colorSelection)
 
     tabControl.add(tab1, text ='Volume Ratio', state=NORMAL)
-    tabControl.add(tab2, text ='Aspect/Taper Ratio', state=NORMAL)
     tabControl.grid(column=1, row=0, sticky='nsew')
 
     tailTab1.constructTab(tab1, colorSelection, fontName, bgThickness)
-    tailTab2.constructTab(tab2, colorSelection, fontName)
 
 def homeActivate() -> None:
     '''Display home page'''
     tab1 = setupWindow("Home")
     homepage.constructTab(tabControl, tab1, colorSelection)
-
 
 def electronicsActivate() -> None:
     '''Display electronics calculators'''
@@ -89,6 +93,7 @@ def fuselageActivate() -> None:
     empty.initEmpty(tabControl, tab1, fontName, colorSelection)
 
 def miscActivate() -> None:
+    '''Display miscellaneous calculators'''
     tab1 = setupWindow("Misc")
     tabControl.add(tab1, text="Competition Scoring", state=NORMAL)
     tabControl.grid(column=1, row=0, sticky='nsew')
@@ -115,7 +120,8 @@ def createButton(btnName: str, funName, btnText: str):
 
 #createButton(button name, function, text to display)
 createButton("Home", homeActivate, "Home")
-createButton("Tail", tailActivate, "Wing/Tail")
+createButton("Wing", wingActivate, "Wing")
+createButton("Tail", tailActivate, "Tail")
 createButton("Electronics", electronicsActivate, "Electronics")
 createButton("Landing Gear", landgearActivate, "Landing\nGear")
 createButton("Fuselage", fuselageActivate, "Fuselage")

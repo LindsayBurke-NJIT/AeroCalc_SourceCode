@@ -56,7 +56,7 @@ def constructTab(tab1: Frame, colorSelection: str, fontName: str, bgThickness: i
                                                                         chordLabel, chordInput, tailLabel, tailInput, lengthLabel, lengthInput,
                                                                         vTailLabel, vTailInput, wingSpanLabel, wingSpanInput, vLengthLabel, vLengthInput), 
                                                                         width=6, height=1, bg="cornflowerblue", font=fontName+" 8")
-    dropButton.grid(row=2, column=2, columnspan=2)
+    dropButton.grid(row=2, column=2, columnspan=2, padx=(0, 190))
 
     startButton = Button(tab1, text="Calculate", command=lambda: submitAll(clicked, outputBox, wingInput, 
                                                                            chordInput, tailInput, lengthInput, 
@@ -81,35 +81,30 @@ def submitDrop(tab1: Frame, clicked: StringVar, colorSelection: str, fontName: s
     '''This function adds the proper labels and input boxes 
     based on whether horizontal or vertical stabilizer was selected
     '''
-    try:
-        if(clicked.get()=="Horizontal"):
-            #Chord field entry
-            chordLabel.grid(row=4,column=1) 
-            chordInput.grid(row=4, column=2)
+    if(clicked.get()=="Horizontal"):
+        #Chord field entry
+        chordLabel.grid(row=4,column=1) 
+        chordInput.grid(row=4, column=2)
                 
-            #Horizontal tail area field entry
-            tailLabel.grid(row=5,column=1)
-            tailInput.grid(row=5, column=2)
+        #Horizontal tail area field entry
+        tailLabel.grid(row=5,column=1)
+        tailInput.grid(row=5, column=2)
 
-            #Length field entry
-            lengthLabel.grid(row=6,column=1, padx=10) 
-            lengthInput.grid(row=6, column=2)
-        else:
-            #Vertical wing area field entry
-            vTailLabel.grid(row=4,column=1, padx=10)
-            vTailInput.grid(row=4, column=2)
+        #Length field entry
+        lengthLabel.grid(row=6,column=1, padx=10) 
+        lengthInput.grid(row=6, column=2)
+    else:
+        #Vertical wing area field entry
+        vTailLabel.grid(row=4,column=1, padx=10)
+        vTailInput.grid(row=4, column=2)
 
-            #Wing span field entry
-            wingSpanLabel.grid(row=5, column=1, padx=10)
-            wingSpanInput.grid(row=5, column=2)
+        #Wing span field entry
+        wingSpanLabel.grid(row=5, column=1, padx=10)
+        wingSpanInput.grid(row=5, column=2)
 
-            #Length field entry
-            vLengthLabel.grid(row=6,column=1, padx=10) 
-            vLengthInput.grid(row=6, column=2)
-    except NameError:
-        outputBox.configure(state=NORMAL)
-        outputBox.insert("1.0", "Error: Incorrect entry\n")
-        outputBox.configure(state=DISABLED)
+        #Length field entry
+        vLengthLabel.grid(row=6,column=1, padx=10) 
+        vLengthInput.grid(row=6, column=2)
 
 def resetAll(clicked: StringVar, tailInput: Text, lengthInput: Text, 
              wingSpanInput: Text, chordInput: Text, vTailInput: Text,
@@ -145,11 +140,19 @@ def setValues(clicked: StringVar, outputBox: Text,
             chord = float(chordInput.get())
             tailArea = float(tailInput.get())
             myLength = float(lengthInput.get())
+
+            if(wingArea<0 or chord<0 or tailArea<0 or myLength<0):
+                addError(outputBox, "Values cannot be negative")
+                return False
         if(clicked.get()=="Vertical"):
             vTailArea = float(vTailInput.get())
             vLength = float(vLengthInput.get())
             wingSpan = float(wingSpanInput.get())
             wingArea = float(wingInput.get())
+
+            if(vTailArea<0 or vLength<0 or wingSpan<0 or wingArea<0):
+                addError(outputBox, "Values cannot be negative")
+                return False
         return True
     except:
         return False
@@ -186,4 +189,4 @@ def submitAll(clicked: StringVar, outputBox: Text, wingInput: Text, chordInput: 
         except ZeroDivisionError:
             addError(outputBox, "Division by Zero")
     else:
-        addError(outputBox, "Incorrect input")
+        addError(outputBox, "Incorrect Input")

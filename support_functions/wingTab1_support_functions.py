@@ -1,44 +1,44 @@
-"""Tab2 -- Aspect/Taper Ratio"""
+"""Tab 1 -- Aspect/Taper Ratio"""
 from tkinter import *
 
 def constructTab(tab2: Frame, colorSelection: str, fontName: str) -> None:
     '''Creates all of the Tkinter widgets'''
     #Defines all labels, buttons, and input boxes
-    ttlLabel = Label(tab2, text="Aspect Ratio, Area, and Taper Ratio Calculator\n", bg=colorSelection, font=fontName+" 15 bold", justify=CENTER).grid(row=0, column=0,columnspan=4, padx=(40,0))
-    tipChordLabel = Label(tab2, text="Tip Chord", bg=colorSelection, font=fontName+" 13 bold").grid(row=1, column=2)
+    ttlLabel = Label(tab2, text="Aspect Ratio, Area, and Taper Ratio Calculator\n", bg=colorSelection, font=fontName+" 15 bold", justify=CENTER).grid(row=0, column=0,columnspan=4, padx=(40,52))
+    tipChordLabel = Label(tab2, text="Tip Chord", bg=colorSelection, font=fontName+" 13 bold").grid(row=1, column=1)
     tipChordInput = Entry(tab2)
-    tipChordInput.grid(row=1, column=3)
+    tipChordInput.grid(row=1, column=2)
 
-    rootChordLabel = Label(tab2, text="Root Chord", bg=colorSelection, font=fontName+" 13 bold").grid(row=2, column=2)
+    rootChordLabel = Label(tab2, text="Root Chord", bg=colorSelection, font=fontName+" 13 bold").grid(row=2, column=1)
     rootChordInput = Entry(tab2)
-    rootChordInput.grid(row=2, column=3)
+    rootChordInput.grid(row=2, column=2)
 
-    spanLabel = Label(tab2, text="Span 1 (constant-chord span)", bg=colorSelection, font=fontName+" 13 bold").grid(row=3, column=2)
+    spanLabel = Label(tab2, text="Span 1 (constant-chord span)", bg=colorSelection, font=fontName+" 13 bold").grid(row=3, column=1)
     spanInput = Entry(tab2)
-    spanInput.grid(row=3, column=3)
+    spanInput.grid(row=3, column=2)
 
-    span2Label = Label(tab2, text="Span 2 (wingtip to end of taper)", bg=colorSelection, font=fontName+" 13 bold").grid(row=4, column=2)
+    span2Label = Label(tab2, text="Span 2 (wingtip to end of taper)", bg=colorSelection, font=fontName+" 13 bold").grid(row=4, column=1)
     span2Input = Entry(tab2)
-    span2Input.grid(row=4, column=3)
+    span2Input.grid(row=4, column=2)
 
-    areaLabel = Label(tab2, text="Wing Area", bg=colorSelection, font=fontName+" 13 bold").grid(row=6, column=2)
+    areaLabel = Label(tab2, text="Wing Area", bg=colorSelection, font=fontName+" 13 bold").grid(row=6, column=1)
     areaInput = Text(tab2, state=DISABLED, width=15, height=1)
-    areaInput.grid(row=6, column=3)
+    areaInput.grid(row=6, column=2)
 
-    aspectLabel = Label(tab2, text="Aspect Ratio", bg=colorSelection, font=fontName+" 13 bold").grid(row=7, column=2)
+    aspectLabel = Label(tab2, text="Aspect Ratio", bg=colorSelection, font=fontName+" 13 bold").grid(row=7, column=1)
     aspectInput = Text(tab2, state=DISABLED, width=15, height=1)
-    aspectInput.grid(row=7, column=3)
+    aspectInput.grid(row=7, column=2)
 
-    taperLabel = Label(tab2, text="Taper Ratio", bg=colorSelection, font=fontName+" 13 bold").grid(row=8, column=2)
+    taperLabel = Label(tab2, text="Taper Ratio", bg=colorSelection, font=fontName+" 13 bold").grid(row=8, column=1)
     taperInput = Text(tab2, state=DISABLED, width=15, height=1)
-    taperInput.grid(row=8, column=3)
+    taperInput.grid(row=8, column=2)
 
-    errorLabel = Label(tab2, text="Error Log", bg=colorSelection, font=fontName+" 13 bold").grid(row=9, column=2, columnspan=2, pady=(40, 0))
+    errorLabel = Label(tab2, text="Error Log", bg=colorSelection, font=fontName+" 13 bold").grid(row=9, column=1, columnspan=2, pady=(40, 0))
     errorInput = Text(tab2, state=DISABLED, width=20, height = 5, fg="red", wrap="word")
-    errorInput.grid(row=10, column=2, columnspan=2)
+    errorInput.grid(row=10, column=1, columnspan=2)
 
     startButton2 = Button(tab2, text="Calculate", command=lambda: calcAll(tipChordInput, rootChordInput, spanInput, span2Input, errorInput, areaInput, taperInput, aspectInput), width=7, height=1, bg="cornflowerblue", font=fontName, relief="sunken")
-    startButton2.grid(row=5,column=2,columnspan=2, pady=(5,60))
+    startButton2.grid(row=5,column=1,columnspan=2, pady=(5,60))
     
 def setVals(tipChordInput: Text, rootChordInput: Text, spanInput: Text, span2Input: Text, errorInput: Text) -> bool:
     '''This function sets the values of variables from input boxes

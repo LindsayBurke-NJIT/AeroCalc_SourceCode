@@ -166,7 +166,7 @@ def generatePlot(filesArray: dict, units: str, sheetNames: list[str], maxIndices
 
 def downloadPlot(errorLabel: Label) -> None:
     '''Downloads the generated plot to the user's device'''
-    fileName = filedialog.asksaveasfilename(confirmoverwrite=True, initialfile="untitled.png", defaultextension="png", filetypes=[(".png", ".jpg")])
+    fileName = filedialog.asksaveasfilename(confirmoverwrite=True, initialfile="untitled.png", defaultextension="png", filetypes=[(".png", ".png")])
     if(fileName!=""):
         plt.savefig(fileName)
 
