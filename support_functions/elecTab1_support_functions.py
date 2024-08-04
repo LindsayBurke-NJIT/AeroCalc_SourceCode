@@ -98,7 +98,8 @@ def readFiles(filesToRead: list, maxThrust: dict, root, dropDownUnits: str, erro
                     maxIndex = currCsv[sheetColNames[0]].idxmax()
                     maxIndices.append(maxIndex)
                     powerColIndex = currCsv.columns.get_loc(sheetColNames[1])
-                    powerAtMax = currCsv.iloc[maxIndex-2, powerColIndex]
+                    maxIndex = maxIndex if maxIndex<2 else maxIndex-2 #to avoid the wattage being artificially low when max thrust is at the time the throttle is cut
+                    powerAtMax = currCsv.iloc[maxIndex, powerColIndex]
 
                     powerInW[fileName] = "%.1f" % powerAtMax #format power to one decimal place
                     maxThrust[fileName] = "%.3f" % maxVal #format thrust to three decimal places
@@ -129,9 +130,9 @@ def readFiles(filesToRead: list, maxThrust: dict, root, dropDownUnits: str, erro
         sortedPropNames = sorted(maxThrust, key=maxThrust.get, reverse=True)
         rankNumber = 1
         for name in sortedPropNames:
-            rankRows.append(Label(root, text=str(rankNumber)+". "+name+" Max Thrust: "+str(maxThrust[name])+
-                                  " "+dropDownUnits+" at "+str(powerInW[name])+" W", font="Roboto 12", 
-                                  bg=colorSelection, wraplength=500, padx=40))
+            rankRows.append(Label(root, 
+                            text=f"{str(rankNumber)}. {name} Max Thrust: {str(maxThrust[name])} {dropDownUnits} at {str(powerInW[name])} W",
+                            font="Roboto 12", bg=colorSelection, wraplength=500, padx=40))
             rankRows[rankNumber-1].grid(row=4+rankNumber, column=1, columnspan=2, sticky='w')
             rankNumber+=1
 
