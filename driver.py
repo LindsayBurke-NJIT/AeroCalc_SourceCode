@@ -11,9 +11,10 @@ from tkinter import *
 from tkinter import ttk
 import support_functions.tailTab1_support_functions as tailTab1
 import support_functions.elecTab1_support_functions as elecTab1
-import support_functions.miscTab1_support_functions as miscTab1
 import support_functions.homepage_support_functions as homepage
 import support_functions.wingTab1_support_functions as wingTab1
+import support_functions.miscTab1_support_functions as miscTab1
+import support_functions.miscTab2_support_functions as miscTab2
 import support_functions.empty as empty
 
 #root config
@@ -77,7 +78,7 @@ def electronicsActivate() -> None:
     tab1 = setupWindow("Electronics")
 
     #Tab 1
-    tabControl.add(tab1, text ='Thrust Automation', state=NORMAL)
+    tabControl.add(tab1, text ='Thrust Plot Automation', state=NORMAL)
     tabControl.grid(column=2, row=0, sticky='nsew')
 
     elecTab1.constructTab(tab1, colorSelection, fontName)
@@ -95,10 +96,13 @@ def fuselageActivate() -> None:
 def miscActivate() -> None:
     '''Display miscellaneous calculators'''
     tab1 = setupWindow("Misc")
+    tab2 = Frame(tabControl, width=windowWidth, height=windowHeight)
     tabControl.add(tab1, text="Competition Scoring", state=NORMAL)
+    #tabControl.add(tab2, text="Takeoff Distance", state=NORMAL)
     tabControl.grid(column=1, row=0, sticky='nsew')
 
     miscTab1.constructTab(tab1, colorSelection, fontName)
+    #miscTab2.constructTab(tab2, colorSelection, fontName)
 
 #Buttons setup
 buttons = Frame(root, width=100, height=1000, bg="lightgray")

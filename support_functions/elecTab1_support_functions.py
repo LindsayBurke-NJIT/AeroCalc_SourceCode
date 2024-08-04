@@ -98,7 +98,7 @@ def readFiles(filesToRead: list, maxThrust: dict, root, dropDownUnits: str, erro
                     maxIndex = currCsv[sheetColNames[0]].idxmax()
                     maxIndices.append(maxIndex)
                     powerColIndex = currCsv.columns.get_loc(sheetColNames[1])
-                    powerAtMax = currCsv.iloc[maxIndex, powerColIndex]
+                    powerAtMax = currCsv.iloc[maxIndex-2, powerColIndex]
 
                     powerInW[fileName] = "%.1f" % powerAtMax #format power to one decimal place
                     maxThrust[fileName] = "%.3f" % maxVal #format thrust to three decimal places
