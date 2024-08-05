@@ -1,6 +1,8 @@
 """Tab1 -- Volume Ratio"""
 from tkinter import *
+import TailTab1
 
+obj = TailTab1.TailTab1()
 def constructTab(tab1: Frame, colorSelection: str, fontName: str, bgThickness: int) -> None:
     '''Creates all of the Tkinter widgets'''
     #Creates dropdown menu
@@ -134,23 +136,22 @@ def setValues(clicked: StringVar, outputBox: Text,
     is True when the values are correctly set, and False otherwise.
     '''
     try:
-        global wingArea,chord,tailArea,myLength,vTailArea,vLength,wingSpan
         if(clicked.get()=="Horizontal"):
-            wingArea = float(wingInput.get())
-            chord = float(chordInput.get())
-            tailArea = float(tailInput.get())
-            myLength = float(lengthInput.get())
+            obj.wingArea = float(wingInput.get())
+            obj.chord = float(chordInput.get())
+            obj.tailArea = float(tailInput.get())
+            obj.myLength = float(lengthInput.get())
 
-            if(wingArea<0 or chord<0 or tailArea<0 or myLength<0):
+            if(obj.wingArea<0 or obj.chord<0 or obj.tailArea<0 or obj.myLength<0):
                 addError(outputBox, "Values cannot be negative")
                 return False
         if(clicked.get()=="Vertical"):
-            vTailArea = float(vTailInput.get())
-            vLength = float(vLengthInput.get())
-            wingSpan = float(wingSpanInput.get())
-            wingArea = float(wingInput.get())
+            obj.vTailArea = float(vTailInput.get())
+            obj.vLength = float(vLengthInput.get())
+            obj.wingSpan = float(wingSpanInput.get())
+            obj.wingArea = float(wingInput.get())
 
-            if(vTailArea<0 or vLength<0 or wingSpan<0 or wingArea<0):
+            if(obj.vTailArea<0 or obj.vLength<0 or obj.wingSpan<0 or obj.wingArea<0):
                 addError(outputBox, "Values cannot be negative")
                 return False
         return True
@@ -178,12 +179,12 @@ def submitAll(clicked: StringVar, outputBox: Text, wingInput: Text, chordInput: 
         try:
             if(clicked.get()=="Horizontal"):
                 outputBox.configure(state=NORMAL)
-                h_volumeRatio = (tailArea*myLength)/(wingArea*chord) #Calculates the volume ratio for horizontal stabilizer
+                h_volumeRatio = (obj.tailArea*obj.myLength)/(obj.wingArea*obj.chord) #Calculates the volume ratio for horizontal stabilizer
                 addAnswer(outputBox, h_volumeRatio)
                 return h_volumeRatio
             elif(clicked.get()=="Vertical"):
                 outputBox.configure(state=NORMAL)
-                v_volumeRatio = (vTailArea*vLength)/(wingArea*wingSpan) #Calculates the volume ratio for vertical stabilizer
+                v_volumeRatio = (obj.vTailArea*obj.vLength)/(obj.wingArea*obj.wingSpan) #Calculates the volume ratio for vertical stabilizer
                 addAnswer(outputBox, v_volumeRatio)
                 return v_volumeRatio
         except ZeroDivisionError:
