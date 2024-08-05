@@ -1,8 +1,8 @@
 """Tab1 -- Volume Ratio"""
 from tkinter import *
-import TailTab1
+import support_functions.TailTab1 as tt1
 
-obj = TailTab1.TailTab1()
+obj = tt1.TailTab1()
 def constructTab(tab1: Frame, colorSelection: str, fontName: str, bgThickness: int) -> None:
     '''Creates all of the Tkinter widgets'''
     #Creates dropdown menu
@@ -15,13 +15,13 @@ def constructTab(tab1: Frame, colorSelection: str, fontName: str, bgThickness: i
     dropDown.grid(row=2, columnspan=3)
 
     #Chord field entry
-    chordLabel = Label(tab1, text="Mean Aerodynamic \nChord", bg=colorSelection,  highlightcolor=colorSelection, highlightbackground=colorSelection, highlightthickness=bgThickness, font=fontName+" 12 bold")
+    chordLabel = Label(tab1, text="Mean Aerodynamic Chord", bg=colorSelection,  highlightcolor=colorSelection, highlightbackground=colorSelection, highlightthickness=bgThickness, font=fontName+" 12 bold")
     chordLabel.grid(row=4,column=1, padx=10) 
     chordInput = Entry(tab1)
     chordInput.grid(row=4, column=2)
             
     #Horizontal tail area field entry
-    tailLabel = Label(tab1, text="Horizontal Tail \nArea", bg=colorSelection, highlightcolor=colorSelection, highlightbackground=colorSelection, highlightthickness=bgThickness, font=fontName+" 12 bold")
+    tailLabel = Label(tab1, text="Horizontal Tail Area", bg=colorSelection, highlightcolor=colorSelection, highlightbackground=colorSelection, highlightthickness=bgThickness, font=fontName+" 12 bold")
     tailLabel.grid(row=5,column=1, padx=10) 
     tailInput = Entry(tab1)
     tailInput.grid(row=5, column=2)
@@ -57,7 +57,7 @@ def constructTab(tab1: Frame, colorSelection: str, fontName: str, bgThickness: i
     dropButton = Button(tab1, text="Select", command=lambda: submitDrop(tab1, clicked, colorSelection, fontName, bgThickness, outputBox,
                                                                         chordLabel, chordInput, tailLabel, tailInput, lengthLabel, lengthInput,
                                                                         vTailLabel, vTailInput, wingSpanLabel, wingSpanInput, vLengthLabel, vLengthInput), 
-                                                                        width=6, height=1, bg="cornflowerblue", font=fontName+" 8")
+                        width=6, height=1, bg="cornflowerblue", font=fontName+" 8")
     dropButton.grid(row=2, column=2, columnspan=2, padx=(0, 190))
 
     startButton = Button(tab1, text="Calculate", command=lambda: submitAll(clicked, outputBox, wingInput, 
@@ -83,7 +83,14 @@ def submitDrop(tab1: Frame, clicked: StringVar, colorSelection: str, fontName: s
     '''This function adds the proper labels and input boxes 
     based on whether horizontal or vertical stabilizer was selected
     '''
+    horizontalWidgets = [chordLabel, chordInput, tailLabel, tailInput, lengthLabel, lengthInput]
+    verticalWidgets = [vTailLabel, vTailInput, wingSpanLabel, wingSpanInput, vLengthLabel, vLengthInput]
+
+    rowIndex = 4 #start at row 4 for user input boxes
     if(clicked.get()=="Horizontal"):
+        for widget in verticalWidgets:
+            widget.grid_remove()
+
         #Chord field entry
         chordLabel.grid(row=4,column=1) 
         chordInput.grid(row=4, column=2)
@@ -96,6 +103,9 @@ def submitDrop(tab1: Frame, clicked: StringVar, colorSelection: str, fontName: s
         lengthLabel.grid(row=6,column=1, padx=10) 
         lengthInput.grid(row=6, column=2)
     else:
+        for widget in horizontalWidgets:
+            widget.grid_remove()
+
         #Vertical wing area field entry
         vTailLabel.grid(row=4,column=1, padx=10)
         vTailInput.grid(row=4, column=2)
