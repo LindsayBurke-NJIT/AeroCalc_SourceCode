@@ -129,7 +129,7 @@ def createButton(btnName: str, funName, btnText: str):
     buttonList[btnName] = currBtn
     rowNum+=1
 
-#createButton(button name, function, text to display)
+#         button name, function, text to display)
 createButton("Home", homeActivate, "Home")
 createButton("Wing", wingActivate, "Wing")
 createButton("Tail", tailActivate, "Tail")

@@ -89,48 +89,50 @@ def readFiles(filesToRead: list, maxThrust: dict, root, dropDownUnits: str, erro
     sheetColNames = ['Thrust ('+dropDownUnits+')', 'Electrical Power (W)']
     maxThrust.clear() #clear list from last plot
     maxIndices.clear()
+    filesToPlot.clear()
 
     try:
         for file in filesToRead:
             fileExtension = (file.split("."))[-1]
             fileName = file.split(".")[0]
-            if fileExtension=="csv":
-                currCsv = pd.read_csv(currDir+"/"+file, usecols=sheetColNames)
-                try:
-                    currCsv[sheetColNames[0]] = currCsv[sheetColNames[0]].abs() #take absolute value in case user didn't check the box to make thrust positive
-                    filesToPlot[fileName] = currCsv
+            if(fileName not in filesToPlot):
+                if fileExtension=="csv":
+                    currCsv = pd.read_csv(currDir+"/"+file, usecols=sheetColNames)
+                    try:
+                        currCsv[sheetColNames[0]] = currCsv[sheetColNames[0]].abs() #take absolute value in case user didn't check the box to make thrust positive
+                        filesToPlot[fileName] = currCsv
 
-                    maxVal = max(currCsv[sheetColNames[0]])
-                    maxIndex = currCsv[sheetColNames[0]].idxmax()
-                    powerColIndex = currCsv.columns.get_loc(sheetColNames[1])
-                    maxIndex = maxIndex if maxIndex<2 else maxIndex-2 #to avoid the wattage being artificially low when max thrust is at the time the throttle is cut
-                    maxIndices.append(maxIndex)
-                    powerAtMax = currCsv.iloc[maxIndex, powerColIndex]
+                        maxVal = max(currCsv[sheetColNames[0]])
+                        maxIndex = currCsv[sheetColNames[0]].idxmax()
+                        powerColIndex = currCsv.columns.get_loc(sheetColNames[1])
+                        maxIndex = maxIndex if maxIndex<2 else maxIndex-2 #to avoid the wattage being artificially low when max thrust is at the time the throttle is cut
+                        maxIndices.append(maxIndex)
+                        powerAtMax = currCsv.iloc[maxIndex, powerColIndex]
 
-                    powerInW[fileName] = "%.1f" % powerAtMax #format power to one decimal place
-                    maxThrust[fileName] = "%.3f" % maxVal #format thrust to three decimal places
-                except:
-                    continue
-            elif fileExtension=="xlsx":
-                currXl = pd.read_excel(currDir+"/"+file, usecols=sheetColNames)
-                try:
-                    currXl[sheetColNames[0]] = currXl[sheetColNames[0]].abs()  #take absolute value in case user didn't check the box to make thrust positive
-                    filesToPlot[fileName] = currXl
-                    
-                    maxVal = max(currXl[(sheetColNames[0])])
-                    maxIndex = currXl[sheetColNames[0]].idxmax()
-                    powerColIndex = currXl.columns.get_loc(sheetColNames[1])
-                    maxIndex = maxIndex if maxIndex<2 else maxIndex-2 #to avoid the wattage being artificially low when max thrust is at the time the throttle is cut
-                    maxIndices.append(maxIndex)
-                    powerAtMax = currXl.iloc[maxIndex, powerColIndex]
+                        powerInW[fileName] = "%.1f" % powerAtMax #format power to one decimal place
+                        maxThrust[fileName] = "%.3f" % maxVal #format thrust to three decimal places
+                    except:
+                        continue
+                elif fileExtension=="xlsx":
+                    currXl = pd.read_excel(currDir+"/"+file, usecols=sheetColNames)
+                    try:
+                        currXl[sheetColNames[0]] = currXl[sheetColNames[0]].abs()  #take absolute value in case user didn't check the box to make thrust positive
+                        filesToPlot[fileName] = currXl
+                        
+                        maxVal = max(currXl[(sheetColNames[0])])
+                        maxIndex = currXl[sheetColNames[0]].idxmax()
+                        powerColIndex = currXl.columns.get_loc(sheetColNames[1])
+                        maxIndex = maxIndex if maxIndex<2 else maxIndex-2 #to avoid the wattage being artificially low when max thrust is at the time the throttle is cut
+                        maxIndices.append(maxIndex)
+                        powerAtMax = currXl.iloc[maxIndex, powerColIndex]
 
-                    powerInW[fileName] = "%.1f" % powerAtMax #format power to one decimal place
-                    maxThrust[fileName] = "%.3f" % maxVal #format thrust to three decimal places
-                except:
-                    continue
-            else:
-                print("Error: Something went wrong. All files must be xlsx or csv.")
-                exit(2)
+                        powerInW[fileName] = "%.1f" % powerAtMax #format power to one decimal place
+                        maxThrust[fileName] = "%.3f" % maxVal #format thrust to three decimal places
+                    except:
+                        continue
+                else:
+                    print("Error: Something went wrong. All files must be xlsx or csv.")
+                    exit(2)
 
         errorText.config(text="")
         clearRanking(rankRows)
@@ -152,6 +154,7 @@ def readFiles(filesToRead: list, maxThrust: dict, root, dropDownUnits: str, erro
                          "\nThe xlsx or csv file should be the exact formatting as outputted by the Series 1585 thrust stand.")
         #clear output from previous run
         clearRanking(rankRows)
+        plt.clf()
 
 def generatePlot(filesArray: dict, units: str, sheetNames: list[str], maxIndices: list[int]) -> None:
     '''Produces a plot of thrust vs power from pandas DataFrame object'''
@@ -160,6 +163,8 @@ def generatePlot(filesArray: dict, units: str, sheetNames: list[str], maxIndices
 
     patchesArr = []
     index=0
+
+    plt.clf()
     for spreadsheet in filesArray.values():
         x = (spreadsheet[power])[:maxIndices[index]]
         y = (spreadsheet[thrust])[:maxIndices[index]]
