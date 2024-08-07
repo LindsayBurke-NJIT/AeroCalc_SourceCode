@@ -9,7 +9,7 @@
 
 from tkinter import *
 from tkinter import ttk
-import sys
+import sys, os
 import support_functions.tailTab1_support_functions as tailTab1
 import support_functions.elecTab1_support_functions as elecTab1
 import support_functions.homepage_support_functions as homepage
@@ -163,3 +163,6 @@ if __name__ == "__main__":
     if getattr(sys, 'frozen', False):
         pyi_splash.close()
     root.mainloop()
+    
+    #kill the processes when application is closed
+    root.protocol("WM_DELETE_WINDOW", sys.exit(0))
