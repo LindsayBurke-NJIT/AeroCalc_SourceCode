@@ -48,9 +48,9 @@ def constructTab(tab1: Frame, colorSelection: str, fontName: str, bgThickness: i
 
     #Output box setup
     outputLabel = Label(tab1, text="Volume Ratio:", bg="grey", font=fontName+" 13 bold")
-    outputLabel.grid(row=8, column=2, pady=(10,0))
+    outputLabel.grid(row=8, column=2, pady=(10,0), padx=(0, 30))
     outputBox = Text(tab1, width=20, height=5, font=fontName+" 13")
-    outputBox.grid(row=9, column=2, padx=(10,0), sticky='w')
+    outputBox.grid(row=9, column=2, padx=(0,20), sticky='w')
     outputBox.configure(state=DISABLED)
 
     #Defines all buttons
@@ -68,10 +68,10 @@ def constructTab(tab1: Frame, colorSelection: str, fontName: str, bgThickness: i
     startButton.grid(sticky='nw', row=9, column=1, padx=(23,0))
 
     resetButton = Button(tab1, text="Clear \nInput", command=lambda: resetAll(clicked, tailInput, lengthInput, wingSpanInput, chordInput, vTailInput, vLengthInput, wingInput), width=7, height=2, bg="cornflowerblue", font=fontName, relief="sunken")
-    resetButton.grid(sticky="ne", row=9, column=1)
+    resetButton.grid(sticky="ne", row=9, column=1, padx=(0, 20))
 
     clearOutputButton = Button(tab1, text="Clear \nOutput", command=lambda: clearOutput(outputBox), width=7, height=2, bg="cornflowerblue", font=fontName, relief="sunken")
-    clearOutputButton.grid(sticky='n', row=9, column=1, padx=(13,0))
+    clearOutputButton.grid(sticky='n', row=9, column=1)
 
 def submitDrop(tab1: Frame, clicked: StringVar, colorSelection: str, fontName: str, bgThickness: int, outputBox: Text,
                chordLabel: Label, chordInput: Text,
@@ -176,6 +176,7 @@ def addError(outputBox: Text, e: str):
 
 def addAnswer(outputBox: Text, ans: float):
     outputBox.configure(state=NORMAL, fg="black")
+    ans = "%.5f" % ans #format answer to five decimal places
     outputBox.insert("1.0", str(ans)+"\n")
     outputBox.configure(state=DISABLED)
 

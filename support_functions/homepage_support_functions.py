@@ -1,4 +1,6 @@
 from tkinter import *
+import pathlib, os
+from . import general_functions as general
 
 def constructTab(tabControl, tab1: Frame, colorSelection: str) -> None:
     global aeroLogo #declared PhotoImage global to avoid garbage collection
@@ -10,10 +12,14 @@ def constructTab(tabControl, tab1: Frame, colorSelection: str) -> None:
 
     welcomeText = Label(tab1, wraplength=400, font="Roboto 14", bg=colorSelection, text="Welcome to AeroCalc, created by and for the NJIT Flylanders™ SAE Aero Design Team.")
     welcomeText.grid(row=1, column=0, columnspan=2, sticky='nsew', padx=75, pady=(50, 0))
-
-    aeroLogo = PhotoImage(file="./images/aeroLogo.png")
-    aeroPhoto = Label(tab1, image = aeroLogo, width=200, height=200, bg=colorSelection)
-    aeroPhoto.grid(row=2, column=0, columnspan=2, sticky='nsew', padx = 150, pady=20)
+    aeroImg = "aeroLogo.png"
+    try:
+        imgPath = general.addImg(aeroImg)
+        aeroLogo = PhotoImage(file=imgPath)
+        aeroPhoto = Label(tab1, image = aeroLogo, width=200, height=200, bg=colorSelection)
+        aeroPhoto.grid(row=2, column=0, columnspan=2, sticky='nsew', padx = 150, pady=20)
+    except:
+        print(f"{aeroImg} not found at {imgPath}")
 
     descrText = Label(tab1, wraplength=400, font="Roboto 14", bg=colorSelection, text="This program is a compilation of calculators and tools used by each of our subteams to design our competition RC plane.")
     descrText.grid(row=3, column=0, columnspan=2, sticky='nsew')

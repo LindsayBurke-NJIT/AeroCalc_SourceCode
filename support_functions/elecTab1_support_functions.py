@@ -20,6 +20,8 @@ def constructTab(tab1: Frame, colorSelection:str, fontName: str) -> None:
 
     filesToRead = [] #list of spreadsheet files in the directory that can be plotted
     maxThrust = {} #dictionary of max thrusts {fileName : maxThrust}
+    maxIndices = []
+    rankRows = [] #stores filenames in order of descending thrust
 
     fileSelectButton = Button(tab1, text="Select Folder", wraplength=400, width=40, justify=LEFT, bg=buttonColor, fg=buttonTextColor, command=lambda: selectFolder(errorText, fileSelectButton, filesToRead))
     fileSelectButton.grid(column=2, row=0, columnspan=1, padx=10, pady=10, sticky='w')
@@ -34,7 +36,7 @@ def constructTab(tab1: Frame, colorSelection:str, fontName: str) -> None:
     unitDropDown.config(highlightthickness=1, bg=buttonColor, fg=buttonTextColor)
     unitDropDown.grid(row=1, column=2, columnspan=1, sticky='w', padx=10)
 
-    startPlotButton = Button(tab1, text="Plot", width=40, bg=buttonColor, fg=buttonTextColor, command=lambda: readFiles(filesToRead, maxThrust, tab1, clicked.get(), errorText, colorSelection))
+    startPlotButton = Button(tab1, text="Plot", width=40, bg=buttonColor, fg=buttonTextColor, command=lambda: readFiles(filesToRead, maxThrust, tab1, clicked.get(), errorText, colorSelection, maxIndices, rankRows))
     startPlotButton.grid(row=3, column=1, columnspan=2, pady=10, padx=(100, 0), sticky='w')
 
     downloadPlotsButton = Button(tab1, text="Download", bg="black", fg="white", width=10, height=1, wraplength=100, command=lambda: downloadPlot(errorText))
@@ -75,14 +77,18 @@ def selectFolder(errorText: Label, buttonText: Button, filesToBeRead: list) -> b
             return False
     return True
 
-def readFiles(filesToRead: list, maxThrust: dict, root, dropDownUnits: str, errorText: Label, colorSelection: str)-> None:
+def clearRanking(rankList: list) -> None:
+    for row in range(len(rankList)):
+        rankList[row].config(text="") 
+    rankList.clear()
+
+def readFiles(filesToRead: list, maxThrust: dict, root, dropDownUnits: str, errorText: Label, colorSelection: str, maxIndices: list[int], rankRows: list[Label])-> None:
     '''Read the spreadsheet, process the data, and display ranking of propellers'''
-    rankRows = [] #stores filenames in order of descending thrust
     powerInW = {} #stores corresponding power (in watts) at max thrust in order of props with descending thrust
     filesToPlot = {} #stores files to plot and its corresponding plot label
     sheetColNames = ['Thrust ('+dropDownUnits+')', 'Electrical Power (W)']
     maxThrust.clear() #clear list from last plot
-    maxIndices = []
+    maxIndices.clear()
 
     try:
         for file in filesToRead:
@@ -96,9 +102,9 @@ def readFiles(filesToRead: list, maxThrust: dict, root, dropDownUnits: str, erro
 
                     maxVal = max(currCsv[sheetColNames[0]])
                     maxIndex = currCsv[sheetColNames[0]].idxmax()
-                    maxIndices.append(maxIndex)
                     powerColIndex = currCsv.columns.get_loc(sheetColNames[1])
                     maxIndex = maxIndex if maxIndex<2 else maxIndex-2 #to avoid the wattage being artificially low when max thrust is at the time the throttle is cut
+                    maxIndices.append(maxIndex)
                     powerAtMax = currCsv.iloc[maxIndex, powerColIndex]
 
                     powerInW[fileName] = "%.1f" % powerAtMax #format power to one decimal place
@@ -114,6 +120,8 @@ def readFiles(filesToRead: list, maxThrust: dict, root, dropDownUnits: str, erro
                     maxVal = max(currXl[(sheetColNames[0])])
                     maxIndex = currXl[sheetColNames[0]].idxmax()
                     powerColIndex = currXl.columns.get_loc(sheetColNames[1])
+                    maxIndex = maxIndex if maxIndex<2 else maxIndex-2 #to avoid the wattage being artificially low when max thrust is at the time the throttle is cut
+                    maxIndices.append(maxIndex)
                     powerAtMax = currXl.iloc[maxIndex, powerColIndex]
 
                     powerInW[fileName] = "%.1f" % powerAtMax #format power to one decimal place
@@ -125,6 +133,7 @@ def readFiles(filesToRead: list, maxThrust: dict, root, dropDownUnits: str, erro
                 exit(2)
 
         errorText.config(text="")
+        clearRanking(rankRows)
 
         #Display ranking of propellers
         sortedPropNames = sorted(maxThrust, key=maxThrust.get, reverse=True)
@@ -139,12 +148,10 @@ def readFiles(filesToRead: list, maxThrust: dict, root, dropDownUnits: str, erro
         #Call graphing function
         generatePlot(filesToPlot, dropDownUnits, sheetColNames, maxIndices)
     except:
-        errorText.config(text="Error: No column found for thrust with the following units: "+dropDownUnits
-                         +"\nCheck that you selected the correct units."+
+        errorText.config(text=f"Error: No column found for thrust with the following units: {dropDownUnits}\nCheck that you selected the correct units."+
                          "\nThe xlsx or csv file should be the exact formatting as outputted by the Series 1585 thrust stand.")
         #clear output from previous run
-        for row in range(len(rankRows)):
-            rankRows[row].config(text="")
+        clearRanking(rankRows)
 
 def generatePlot(filesArray: dict, units: str, sheetNames: list[str], maxIndices: list[int]) -> None:
     '''Produces a plot of thrust vs power from pandas DataFrame object'''

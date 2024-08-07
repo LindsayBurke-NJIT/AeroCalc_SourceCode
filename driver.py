@@ -9,13 +9,19 @@
 
 from tkinter import *
 from tkinter import ttk
+import sys
 import support_functions.tailTab1_support_functions as tailTab1
 import support_functions.elecTab1_support_functions as elecTab1
 import support_functions.homepage_support_functions as homepage
 import support_functions.wingTab1_support_functions as wingTab1
 import support_functions.miscTab1_support_functions as miscTab1
 import support_functions.miscTab2_support_functions as miscTab2
+import support_functions.general_functions as general
 import support_functions.empty as empty
+
+#import for splash screen with pyinstaller whenever exe is run
+if getattr(sys, 'frozen', False):
+    import pyi_splash
 
 #root config
 root = Tk()
@@ -27,7 +33,8 @@ root.geometry(f'{windowWidth}x{windowHeight}')
 root.resizable(False, False)
 
 try:
-    photo = PhotoImage(file = "./images/aeroLogo.png")
+    imgPath = general.addImg("aeroLogo.png")
+    photo = PhotoImage(file = imgPath)
     root.iconphoto(False, photo)
 except:
     pass
@@ -153,4 +160,6 @@ def setupWindow(currBtn: str) -> Frame:
 
 if __name__ == "__main__":
     homeActivate() #start with home page displaying to user
+    if getattr(sys, 'frozen', False):
+        pyi_splash.close()
     root.mainloop()
