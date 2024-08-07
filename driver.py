@@ -18,6 +18,7 @@ import support_functions.miscTab1_support_functions as miscTab1
 import support_functions.miscTab2_support_functions as miscTab2
 import support_functions.general_functions as general
 import support_functions.empty as empty
+import matplotlib as plt
 
 #import for splash screen with pyinstaller whenever exe is run
 if getattr(sys, 'frozen', False):

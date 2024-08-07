@@ -24,7 +24,7 @@ def constructTab(tab1: Frame, colorSelection:str, fontName: str) -> None:
     rankRows = [] #stores filenames in order of descending thrust
 
     fileSelectButton = Button(tab1, text="Select Folder", wraplength=400, width=40, justify=LEFT, bg=buttonColor, fg=buttonTextColor, command=lambda: selectFolder(errorText, fileSelectButton, filesToRead))
-    fileSelectButton.grid(column=2, row=0, columnspan=1, padx=10, pady=10, sticky='w')
+    fileSelectButton.grid(column=2, row=0, columnspan=1, padx=(10,75), pady=10, sticky='w')
 
     #Creates thrust unit dropdown menu
     options = ["lbf", "kg"]
@@ -37,13 +37,10 @@ def constructTab(tab1: Frame, colorSelection:str, fontName: str) -> None:
     unitDropDown.grid(row=1, column=2, columnspan=1, sticky='w', padx=10)
 
     startPlotButton = Button(tab1, text="Plot", width=40, bg=buttonColor, fg=buttonTextColor, command=lambda: readFiles(filesToRead, maxThrust, tab1, clicked.get(), errorText, colorSelection, maxIndices, rankRows))
-    startPlotButton.grid(row=3, column=1, columnspan=2, pady=10, padx=(100, 0), sticky='w')
-
-    downloadPlotsButton = Button(tab1, text="Download", bg="black", fg="white", width=10, height=1, wraplength=100, command=lambda: downloadPlot(errorText))
-    downloadPlotsButton.grid(row=3, column=2, padx=(250, 40), sticky='w')
+    startPlotButton.grid(row=3, column=1, columnspan=2, pady=10, padx=(125, 0), sticky='w')
 
     rankingTextLabel = Label(tab1, text="Propeller Ranking:", font=fontName+" 15 bold", bg=colorSelection)
-    rankingTextLabel.grid(row=4, column=1, columnspan=2, sticky='nsw', pady=20, padx=150)
+    rankingTextLabel.grid(row=4, column=1, columnspan=2, sticky='nsw', pady=20, padx=175)
 
 def selectFolder(errorText: Label, buttonText: Button, filesToBeRead: list) -> bool:
     '''This function lets the user select a folder of xlsx/csv from a file dialogue.
@@ -176,12 +173,7 @@ def generatePlot(filesArray: dict, units: str, sheetNames: list[str], maxIndices
         index+=1
     plt.grid()
     plt.legend(loc="lower right", handles=patchesArr)
-
-def downloadPlot(errorLabel: Label) -> None:
-    '''Downloads the generated plot to the user's device'''
-    fileName = filedialog.asksaveasfilename(confirmoverwrite=True, initialfile="untitled.png", defaultextension="png", filetypes=[(".png", ".png")])
-    if(fileName!=""):
-        plt.savefig(fileName)
+    plt.show()
 
 def isPlotEmpty(plot) -> bool:
     '''This function returns true if the Matplotlib plot is empty, and false otherwise.'''
