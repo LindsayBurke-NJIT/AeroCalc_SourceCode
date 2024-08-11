@@ -39,7 +39,7 @@ def constructTab(tab2: Frame, colorSelection: str, fontName: str) -> None:
 
     startButton2 = Button(tab2, text="Calculate", command=lambda: calcAll(tipChordInput, rootChordInput, spanInput, span2Input, errorInput, areaInput, taperInput, aspectInput), width=7, height=1, bg="cornflowerblue", font=fontName, relief="sunken")
     startButton2.grid(row=5,column=1,columnspan=2, pady=(5,60))
-    
+ 
 def setVals(tipChordInput: Text, rootChordInput: Text, spanInput: Text, span2Input: Text, errorInput: Text) -> bool:
     '''This function sets the values of variables from input boxes
         It returns true if the values were correctly set, and false otherwise.
@@ -79,6 +79,7 @@ def calcArea(areaInput: Text) -> int:
     try:
         areaInput.configure(state=NORMAL)
         area = (span1*rtChord+span2*(tipChord+rtChord)) #Calculates area
+        area = float("%.3f" % area)
         areaInput.insert("1.0", str(area)+"\n")
         areaInput.configure(state=DISABLED)
         return area
@@ -91,6 +92,7 @@ def calcAsptRatio(aspectInput: Text, errorInput: Text) -> int:
         aspectInput.configure(state=NORMAL)
         tspan = span1+span2*2 #total wingspan
         asptRatio = ((tspan**2)/area) #calculates aspect ratio
+        asptRatio = float("%.5f" % asptRatio)
         aspectInput.insert("1.0", str(asptRatio)+"\n")
         aspectInput.configure(state=DISABLED)
         return asptRatio
@@ -107,6 +109,7 @@ def calcTprRatio(taperInput: Text, errorInput: Text) -> int:
     try:
         taperInput.configure(state=NORMAL)
         tprRatio = (tipChord/rtChord) #Calculates taper ratio
+        tprRatio = float("%.5f" % tprRatio)
         taperInput.insert("1.0", str(tprRatio)+"\n")
         taperInput.configure(state=DISABLED)
         return tprRatio
@@ -135,10 +138,10 @@ def calcAll(tipChordInput: Text, rootChordInput: Text, spanInput: Text, span2Inp
             areaInput: Text, taperInput: Text, aspectInput: Text) -> None:
     '''Calculates all variables when the Calculate button is selected'''
     clearError(errorInput)
+    clearOutput(areaInput, aspectInput, taperInput)
+
     isSet = setVals(tipChordInput, rootChordInput, spanInput, span2Input, errorInput)
     if(isSet):
         calcArea(areaInput)
         calcAsptRatio(aspectInput, errorInput)
         calcTprRatio(taperInput, errorInput)
-    else:
-        clearOutput(areaInput, aspectInput, taperInput)

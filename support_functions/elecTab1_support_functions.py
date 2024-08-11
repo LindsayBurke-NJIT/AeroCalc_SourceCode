@@ -79,6 +79,17 @@ def clearRanking(rankList: list) -> None:
         rankList[row].config(text="") 
     rankList.clear()
 
+def displayRanking(root: Frame, maxThrustList: list, rankRows: list, colorSelection: str, dropDownUnits: str, powerInWatts: dict):
+    #Display ranking of propellers
+    sortedPropNames = sorted(maxThrustList, key=maxThrustList.get, reverse=True)
+    rankNumber = 1
+    for name in sortedPropNames:
+        rankRows.append(Label(root, 
+                        text=f"{str(rankNumber)}. {name} Max Thrust: {str(maxThrustList[name])} {dropDownUnits} at {str(powerInWatts[name])} W",
+                        font="Roboto 12", bg=colorSelection, wraplength=500, padx=40))
+        rankRows[rankNumber-1].grid(row=4+rankNumber, column=1, columnspan=2, sticky='w')
+        rankNumber+=1
+
 def readFiles(filesToRead: list, maxThrust: dict, root, dropDownUnits: str, errorText: Label, colorSelection: str, maxIndices: list[int], rankRows: list[Label])-> None:
     '''Read the spreadsheet, process the data, and display ranking of propellers'''
     powerInW = {} #stores corresponding power (in watts) at max thrust in order of props with descending thrust
@@ -133,16 +144,7 @@ def readFiles(filesToRead: list, maxThrust: dict, root, dropDownUnits: str, erro
 
         errorText.config(text="")
         clearRanking(rankRows)
-
-        #Display ranking of propellers
-        sortedPropNames = sorted(maxThrust, key=maxThrust.get, reverse=True)
-        rankNumber = 1
-        for name in sortedPropNames:
-            rankRows.append(Label(root, 
-                            text=f"{str(rankNumber)}. {name} Max Thrust: {str(maxThrust[name])} {dropDownUnits} at {str(powerInW[name])} W",
-                            font="Roboto 12", bg=colorSelection, wraplength=500, padx=40))
-            rankRows[rankNumber-1].grid(row=4+rankNumber, column=1, columnspan=2, sticky='w')
-            rankNumber+=1
+        displayRanking(root, maxThrust, rankRows, colorSelection, dropDownUnits, powerInW)
 
         #Call graphing function
         generatePlot(filesToPlot, dropDownUnits, sheetColNames, maxIndices)
@@ -151,7 +153,7 @@ def readFiles(filesToRead: list, maxThrust: dict, root, dropDownUnits: str, erro
                          "\nThe xlsx or csv file should be the exact formatting as outputted by the Series 1585 thrust stand.")
         #clear output from previous run
         clearRanking(rankRows)
-        plt.clf()
+        plt.close()
 
 def generatePlot(filesArray: dict, units: str, sheetNames: list[str], maxIndices: list[int]) -> None:
     '''Produces a plot of thrust vs power from pandas DataFrame object'''

@@ -1,6 +1,5 @@
 from tkinter import *
-import pathlib, os
-from . import general_functions as general
+import support_functions.images as images
 
 def constructTab(tabControl, tab1: Frame, colorSelection: str) -> None:
     global aeroLogo #declared PhotoImage global to avoid garbage collection
@@ -12,9 +11,11 @@ def constructTab(tabControl, tab1: Frame, colorSelection: str) -> None:
 
     welcomeText = Label(tab1, wraplength=400, font="Roboto 14", bg=colorSelection, text="Welcome to AeroCalc, created by and for the NJIT Flylanders™ SAE Aero Design Team.")
     welcomeText.grid(row=1, column=0, columnspan=2, sticky='nsew', padx=75, pady=(50, 0))
+    
     aeroImg = "aeroLogo.png"
+    imgPath = None
     try:
-        imgPath = general.addImg(aeroImg)
+        imgPath = images.addImg(aeroImg)
         aeroLogo = PhotoImage(file=imgPath)
         aeroPhoto = Label(tab1, image = aeroLogo, width=200, height=200, bg=colorSelection)
         aeroPhoto.grid(row=2, column=0, columnspan=2, sticky='nsew', padx = 150, pady=20)

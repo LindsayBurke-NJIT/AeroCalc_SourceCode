@@ -3,62 +3,64 @@ from tkinter import *
 import support_functions.TailTab1 as tt1
 
 obj = tt1.TailTab1()
-def constructTab(tab1: Frame, colorSelection: str, fontName: str, bgThickness: int) -> None:
+def constructTab(tab1: Frame, colorSelection: str, fontName: str) -> None:
     '''Creates all of the Tkinter widgets'''
     #Creates dropdown menu
     options = ["Horizontal", "Vertical"]
     clicked = StringVar()
     clicked.set("Horizontal")
-    dropText = Label(tab1, text="Select Stabilizer Type:", bg=colorSelection,font=fontName+' 15 bold')
-    dropText.grid(row=1, column=1, pady=10, columnspan=3)
+    titleText = Label(tab1, text="Volume Ratio Calculator", bg=colorSelection, font=fontName+' 15 bold')
+    titleText.grid(row=0, column=1, pady=10, columnspan=2)
+    dropText = Label(tab1, text="Select Stabilizer Type:", bg=colorSelection,font=fontName+' 13 bold')
+    dropText.grid(row=1, column=1, pady=10, columnspan=2)
     dropDown = OptionMenu(tab1, clicked, *options)
-    dropDown.grid(row=2, columnspan=3)
+    dropDown.grid(row=2, columnspan=3, padx=(0, 20), pady=(0, 30))
 
     #Chord field entry
-    chordLabel = Label(tab1, text="Mean Aerodynamic Chord", bg=colorSelection,  highlightcolor=colorSelection, highlightbackground=colorSelection, highlightthickness=bgThickness, font=fontName+" 12 bold")
-    chordLabel.grid(row=4,column=1, padx=10) 
+    chordLabel = Label(tab1, text="Mean Aerodynamic Chord", bg=colorSelection,  highlightcolor=colorSelection, highlightbackground=colorSelection, font=fontName+" 12 bold")
+    chordLabel.grid(row=4,column=1, padx=10, pady=(0,30)) 
     chordInput = Entry(tab1)
-    chordInput.grid(row=4, column=2)
+    chordInput.grid(row=4, column=2, pady=(0,30))
             
     #Horizontal tail area field entry
-    tailLabel = Label(tab1, text="Horizontal Tail Area", bg=colorSelection, highlightcolor=colorSelection, highlightbackground=colorSelection, highlightthickness=bgThickness, font=fontName+" 12 bold")
-    tailLabel.grid(row=5,column=1, padx=10) 
+    tailLabel = Label(tab1, text="Horizontal Tail Area", bg=colorSelection, highlightcolor=colorSelection, highlightbackground=colorSelection, font=fontName+" 12 bold")
+    tailLabel.grid(row=5,column=1, padx=10, pady=(0,30)) 
     tailInput = Entry(tab1)
-    tailInput.grid(row=5, column=2)
+    tailInput.grid(row=5, column=2, pady=(0,30))
 
     #Length field entry
-    lengthLabel = Label(tab1, text="Length between aerodynamic centers \nof the wing and horizontal tailplane", bg=colorSelection, highlightcolor=colorSelection, highlightbackground=colorSelection, highlightthickness=bgThickness, font=fontName+" 12 bold")
-    lengthLabel.grid(row=6,column=1, padx=10) 
+    lengthLabel = Label(tab1, text="Length between aerodynamic centers \nof the wing and horizontal tailplane", bg=colorSelection, highlightcolor=colorSelection, highlightbackground=colorSelection, font=fontName+" 12 bold")
+    lengthLabel.grid(row=6,column=1, padx=10, pady=(0,30)) 
     lengthInput = Entry(tab1)
-    lengthInput.grid(row=6, column=2)
+    lengthInput.grid(row=6, column=2, pady=(0,30))
 
     #Wing area field entry
-    wingLabel = Label(tab1, text="Wing Area", bg=colorSelection,highlightcolor=colorSelection, highlightbackground=colorSelection, highlightthickness=bgThickness, font=fontName+" 12 bold")
-    wingLabel.grid(row=3,column=1, padx=10)
+    wingLabel = Label(tab1, text="Wing Area", bg=colorSelection,highlightcolor=colorSelection, highlightbackground=colorSelection, font=fontName+" 12 bold")
+    wingLabel.grid(row=3,column=1, padx=10, pady=(0,30))
     wingInput = Entry(tab1)
-    wingInput.grid(row=3, column=2)
+    wingInput.grid(row=3, column=2, pady=(0,30))
 
     #Vertical stabilizer setup
-    vTailLabel = Label(tab1, text="Vertical Tail Area", bg=colorSelection, highlightcolor=colorSelection, highlightbackground=colorSelection, highlightthickness=bgThickness, font=fontName+" 12 bold")
+    vTailLabel = Label(tab1, text="Vertical Tail Area", bg=colorSelection, highlightcolor=colorSelection, highlightbackground=colorSelection, font=fontName+" 12 bold")
     vTailInput = Entry(tab1)
-    wingSpanLabel = Label(tab1, text="Wing Span", bg=colorSelection, highlightcolor=colorSelection, highlightbackground=colorSelection, highlightthickness=bgThickness, font=fontName+" 12 bold")
+    wingSpanLabel = Label(tab1, text="Wing Span", bg=colorSelection, highlightcolor=colorSelection, highlightbackground=colorSelection, font=fontName+" 12 bold")
     wingSpanInput = Entry(tab1)
-    vLengthLabel = Label(tab1, text="Length between aerodynamic centers \nof the wing and vertical tailplane", bg=colorSelection, highlightcolor=colorSelection, highlightbackground=colorSelection, highlightthickness=bgThickness, font=fontName+" 12 bold")
+    vLengthLabel = Label(tab1, text="Length between aerodynamic centers \nof the wing and vertical tailplane", bg=colorSelection, highlightcolor=colorSelection, highlightbackground=colorSelection, font=fontName+" 12 bold")
     vLengthInput = Entry(tab1)
 
     #Output box setup
-    outputLabel = Label(tab1, text="Volume Ratio:", bg="grey", font=fontName+" 13 bold")
-    outputLabel.grid(row=8, column=2, pady=(10,0), padx=(0, 30))
+    outputLabel = Label(tab1, text="Volume Ratio:", bg=colorSelection, font=fontName+" 13 bold")
+    outputLabel.grid(row=8, column=2, pady=(10,0), padx=(0, 0))
     outputBox = Text(tab1, width=20, height=5, font=fontName+" 13")
-    outputBox.grid(row=9, column=2, padx=(0,20), sticky='w')
+    outputBox.grid(row=9, column=2, padx=(25,0), sticky='w')
     outputBox.configure(state=DISABLED)
 
     #Defines all buttons
-    dropButton = Button(tab1, text="Select", command=lambda: submitDrop(tab1, clicked, colorSelection, fontName, bgThickness, outputBox,
+    dropButton = Button(tab1, text="Select", command=lambda: submitDrop(tab1, clicked, colorSelection, fontName, outputBox,
                                                                         chordLabel, chordInput, tailLabel, tailInput, lengthLabel, lengthInput,
                                                                         vTailLabel, vTailInput, wingSpanLabel, wingSpanInput, vLengthLabel, vLengthInput), 
                         width=6, height=1, bg="cornflowerblue", font=fontName+" 8")
-    dropButton.grid(row=2, column=2, columnspan=2, padx=(0, 190))
+    dropButton.grid(row=2, column=2, columnspan=1, padx=(0, 190), pady=(2, 0), sticky='nw')
 
     startButton = Button(tab1, text="Calculate", command=lambda: submitAll(clicked, outputBox, wingInput, 
                                                                            chordInput, tailInput, lengthInput, 
@@ -73,7 +75,7 @@ def constructTab(tab1: Frame, colorSelection: str, fontName: str, bgThickness: i
     clearOutputButton = Button(tab1, text="Clear \nOutput", command=lambda: clearOutput(outputBox), width=7, height=2, bg="cornflowerblue", font=fontName, relief="sunken")
     clearOutputButton.grid(sticky='n', row=9, column=1)
 
-def submitDrop(tab1: Frame, clicked: StringVar, colorSelection: str, fontName: str, bgThickness: int, outputBox: Text,
+def submitDrop(tab1: Frame, clicked: StringVar, colorSelection: str, fontName: str, outputBox: Text,
                chordLabel: Label, chordInput: Text,
                tailLabel: Label, tailInput: Text,
                lengthLabel: Label, lengthInput: Text,
@@ -100,23 +102,23 @@ def submitDrop(tab1: Frame, clicked: StringVar, colorSelection: str, fontName: s
         tailInput.grid(row=5, column=2)
 
         #Length field entry
-        lengthLabel.grid(row=6,column=1, padx=10) 
+        lengthLabel.grid(row=6,column=1) 
         lengthInput.grid(row=6, column=2)
     else:
         for widget in horizontalWidgets:
             widget.grid_remove()
 
         #Vertical wing area field entry
-        vTailLabel.grid(row=4,column=1, padx=10)
-        vTailInput.grid(row=4, column=2)
+        vTailLabel.grid(row=4,column=1, padx=10, pady=(0,30))
+        vTailInput.grid(row=4, column=2, pady=(0,30))
 
         #Wing span field entry
-        wingSpanLabel.grid(row=5, column=1, padx=10)
-        wingSpanInput.grid(row=5, column=2)
+        wingSpanLabel.grid(row=5, column=1, padx=10, pady=(0,30))
+        wingSpanInput.grid(row=5, column=2, pady=(0,30))
 
         #Length field entry
-        vLengthLabel.grid(row=6,column=1, padx=10) 
-        vLengthInput.grid(row=6, column=2)
+        vLengthLabel.grid(row=6,column=1, padx=10, pady=(0,30)) 
+        vLengthInput.grid(row=6, column=2, pady=(0,30))
 
 def resetAll(clicked: StringVar, tailInput: Text, lengthInput: Text, 
              wingSpanInput: Text, chordInput: Text, vTailInput: Text,
