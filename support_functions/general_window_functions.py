@@ -10,7 +10,7 @@ from tkinter import *
 class GeneralWindowFunctions:
     def __init__(self, tabControl, windowDimensions: tuple[int], colorSelection: str,
                  fontName: str, buttonList: list[Button], buttonTextColor: str,
-                 buttonColor: str, buttonHeight: int, buttonText: str):
+                 buttonColor: str, buttonHeight: int, buttonText: str, buttonRelief: str):
         self.tabControl = tabControl
         self.windowWidth = windowDimensions[0]
         self.windowHeight = windowDimensions[1]
@@ -21,11 +21,15 @@ class GeneralWindowFunctions:
         self.buttonColor = buttonColor
         self.buttonHeight = buttonHeight
         self.buttonText = buttonText
+        self.buttonRelief = buttonRelief
+
+        self.openTabs = []
 
     def destroyTabs(self) -> None:
         '''Destroys the currently open tabs'''
         for item in self.tabControl.winfo_children():
             item.destroy()
+        self.openTabs.clear()
 
     def resetButtonColors(self) -> None:
         '''Set the buttons for changing the tabs back to their original color before they were the active window'''
@@ -38,69 +42,77 @@ class GeneralWindowFunctions:
         activeButton.config(fg="white", bg="black")
 
     def createButton(self, btnName: str, funName, btnText: str, buttons: Frame):
-        currBtn = Button(buttons, text=btnText, command=funName, font=self.buttonText, height=self.buttonHeight, bg=self.buttonColor, fg=self.buttonTextColor)
+        currBtn = Button(buttons, text=btnText, command=funName, font=self.buttonText, height=self.buttonHeight, relief=self.buttonRelief, bg=self.buttonColor, fg=self.buttonTextColor)
         currBtn.grid(row=len(self.buttonList), column=0, sticky='new')
+        buttons.rowconfigure(len(self.buttonList), weight=1)
+        buttons.columnconfigure(len(self.buttonList), weight=1)
+
         self.buttonList[btnName] = currBtn
 
-    def setupWindow(self, currBtn: str) -> Frame:
+    def setupWindow(self, currBtn: str) -> None:
         '''Call the proper functions to clear out the last tab and setup the current window.
-            Returns the new Frame.
         '''
         self.destroyTabs()
         self.resetButtonColors()
         self.activateButtonColor(currBtn)
+
+    def addTab(self, tabClass, tabName: str) -> Frame:
         newTab = Frame(self.tabControl, width=self.windowWidth, height=self.windowHeight, bg=self.colorSelection)
+        self.openTabs.append(newTab)
+        self.tabControl.add(newTab, text=tabName, state=NORMAL)
+        self.tabControl.grid(column=len(self.openTabs), row=0, sticky='nsew')
         return newTab
 
     def wingActivate(self) -> None:
         '''Display tabs for tail subteam calculators'''
-        tab1 = self.setupWindow("Wing")
-        self.tabControl.add(tab1, text="Aspect/Taper Ratio", state=NORMAL)
-        self.tabControl.grid(column=1, row=0, sticky='nsew')
+        self.setupWindow("Wing")
+        tab1 = self.addTab(wingTab1,"Aspect/Taper Ratio")
 
         wingTab1.constructTab(tab1, self.colorSelection, self.fontName)
 
     def tailActivate(self) -> None:
         '''Display tabs for tail subteam calculators'''
-        tab1 = self.setupWindow("Tail")
+        self.setupWindow("Tail")
 
-        self.tabControl.add(tab1, text ='Volume Ratio', state=NORMAL)
-        self.tabControl.grid(column=1, row=0, sticky='nsew')
+        tab1 = self.addTab(tailTab1, "Volume Ratio")
 
-        tailTab1.constructTab(tab1, self.colorSelection, self.fontName)
+        myTab = tailTab1.TailTab1(tab1, self.colorSelection, self.fontName)
+        myTab.constructTab()
 
     def homeActivate(self) -> None:
         '''Display home page'''
-        tab1 = self.setupWindow("Home")
+        self.setupWindow("Home")
+        
+        tab1 = self.addTab(homepage, "Home")
         homepage.constructTab(self.tabControl, tab1, self.colorSelection)
 
     def electronicsActivate(self) -> None:
         '''Display electronics calculators'''
-        tab1 = self.setupWindow("Electronics")
+        self.setupWindow("Electronics")
 
-        #Tab 1
-        self.tabControl.add(tab1, text ='Thrust Plot Automation', state=NORMAL)
-        self.tabControl.grid(column=2, row=0, sticky='nsew')
-
+        tab1 = self.addTab(elecTab1, "Thrust Plot Automation")
         elecTab1.constructTab(tab1, self.colorSelection, self.fontName)
 
     def landgearActivate(self) -> None:
         '''Display landing gear calculators'''
-        tab1 = self.setupWindow("Landing Gear")
+        self.setupWindow("Landing Gear")
+
+        tab1 = self.addTab(empty, "Empty")
         empty.initEmpty(self.tabControl, tab1, self.fontName, self.colorSelection)
 
     def fuselageActivate(self) -> None:
         '''Display fuselage calculators'''
-        tab1 = self.setupWindow("Fuselage")
+        self.setupWindow("Fuselage")
+
+        tab1 = self.addTab(empty, "Empty")
         empty.initEmpty(self.tabControl, tab1, self.fontName, self.colorSelection)
 
     def miscActivate(self) -> None:
         '''Display miscellaneous calculators'''
-        tab1 = self.setupWindow("Misc")
-        tab2 = Frame(self.tabControl, width=self.windowWidth, height=self.windowHeight)
-        self.tabControl.add(tab1, text="Competition Scoring", state=NORMAL)
-        #tabControl.add(tab2, text="Takeoff Distance", state=NORMAL)
-        self.tabControl.grid(column=1, row=0, sticky='nsew')
+        self.setupWindow("Misc")
 
+        tab1 = self.addTab(miscTab1, "Competition Scoring")
         miscTab1.constructTab(tab1, self.colorSelection, self.fontName)
-        #miscTab2.constructTab(tab2, colorSelection, fontName)
+
+        tab2 = self.addTab(miscTab2, "Takeoff Distance")
+        miscTab2.constructTab(tab2, self.colorSelection, self.fontName)

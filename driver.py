@@ -49,7 +49,7 @@ fontName = "Roboto"
 
 #Buttons setup
 buttons = Frame(root, width=100, height=1000, bg="lightgray")
-buttons.grid(row=0, column=0, sticky='n')
+buttons.grid(row=0, column=0, sticky='nw')
 buttonColor = "#b40707"
 buttonText = "Roboto 12 bold"
 reliefStyle="solid"
@@ -57,10 +57,10 @@ buttonTextColor = "black"
 buttonHeight = 4
 buttonList = {}
 
-if __name__ == "__main__":
+def main():
     windowObj = general.GeneralWindowFunctions(tabControl, (windowWidth, windowHeight), colorSelection,
                                                fontName, buttonList, buttonTextColor,
-                                               buttonColor, buttonHeight, buttonText)
+                                               buttonColor, buttonHeight, buttonText, reliefStyle)
     #                      (button name, function, text to display, Tk Frame)
     windowObj.createButton("Home", windowObj.homeActivate, "Home", buttons)
     windowObj.createButton("Wing", windowObj.wingActivate, "Wing", buttons)
@@ -74,6 +74,6 @@ if __name__ == "__main__":
     if getattr(sys, 'frozen', False):
         pyi_splash.close()
     root.mainloop()
-    
-    #kill the processes when application is closed
-    root.protocol("WM_DELETE_WINDOW", sys.exit(0))
+
+if __name__ == "__main__":
+    main()

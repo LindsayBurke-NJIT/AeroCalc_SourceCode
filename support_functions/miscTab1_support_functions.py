@@ -55,13 +55,14 @@ def calcFS(pPayInput: Entry, wingspanInput: Entry, w1Input: Entry, w2Input: Entr
             currFlightScore = wvar/2+setPPB(wvar, predictedPayload)
             finalFs+=currFlightScore
         finalFs+=wingScore
+        finalFs = "%.3f" % finalFs
 
         clrError(outputBox)
         outputBox.configure(state=NORMAL, fg="black")
         outputBox.insert("1.0", str(finalFs)+"\n")
         outputBox.configure(state=DISABLED)
-    except:
-        pass
+    except Exception as e:
+        addError(outputBox, "Result is too large")
 
 def setPPB(wvar: float, pPay: str) -> float:
     '''
