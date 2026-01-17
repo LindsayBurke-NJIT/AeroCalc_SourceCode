@@ -25,7 +25,12 @@ root.title("NJIT Flylanders™ AeroCalc")
 windowWidth = 640
 windowHeight=630
 root.geometry(f'{windowWidth}x{windowHeight}')
-root.resizable(False, False)
+root.resizable(True, True)
+
+# Configure grid weights for responsive layout
+root.rowconfigure(0, weight=1)
+root.columnconfigure(0, weight=0)  # Button sidebar - fixed width
+root.columnconfigure(1, weight=1)  # Tab content - expandable
 
 try:
     imgPath = addImg("aeroLogo.png")
@@ -42,6 +47,9 @@ myTheme.theme_create( "myTheme", settings={
         })
 myTheme.theme_use("myTheme")
 tabControl = ttk.Notebook(root)
+tabControl.grid(row=0, column=1, sticky='nsew')
+tabControl.rowconfigure(0, weight=1)
+tabControl.columnconfigure(0, weight=1)
 
 #Change color/font styles here
 colorSelection= "lightgray"
@@ -49,7 +57,8 @@ fontName = "Roboto"
 
 #Buttons setup
 buttons = Frame(root, width=100, height=1000, bg="lightgray")
-buttons.grid(row=0, column=0, sticky='nw')
+buttons.grid(row=0, column=0, sticky='ns')
+buttons.grid_propagate(False)  # Keep fixed width
 buttonColor = "#b40707"
 buttonText = "Roboto 12 bold"
 reliefStyle="solid"

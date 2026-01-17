@@ -3,9 +3,11 @@ import support_functions.images as images
 
 def constructTab(tabControl, tab1: Frame, colorSelection: str) -> None:
     global aeroLogo #declared PhotoImage global to avoid garbage collection
-
-    tabControl.add(tab1, text="Home", state=NORMAL)
-    tabControl.grid(column=1, row=0, sticky='nsew')
+    
+    # Configure grid weights for responsive layout
+    tab1.rowconfigure(2, weight=1)  # Make image area expandable
+    tab1.columnconfigure(0, weight=1)  # Center content
+    
     homeTitle = Label(tab1, text="Flylanders™ AeroCalc", bg=colorSelection, font="Roboto 20 bold")
     homeTitle.grid(row=0, column=0, columnspan=10, sticky='nsew', padx=120)
 

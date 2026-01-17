@@ -2,6 +2,11 @@
 from tkinter import *
 
 def constructTab(tab1: Frame, colorSelection: str, fontName: str) -> None:
+    # Configure grid weights for responsive layout
+    tab1.rowconfigure(10, weight=1)  # Make output box expandable
+    tab1.columnconfigure(0, weight=1)  # Left margin
+    tab1.columnconfigure(3, weight=1)  # Right margin
+    
     myLabel = Label(tab1, text="SAE Aero Design Scoring Calculator\n", bg=colorSelection, font=fontName+" 15 bold", justify=CENTER).grid(row=0, column=0,columnspan=4, padx=(100,100))
 
     pPayLabel = Label(tab1, text="Predicted Payload (lbs)", bg=colorSelection, font=fontName+" 13 bold").grid(row=1, column=1)

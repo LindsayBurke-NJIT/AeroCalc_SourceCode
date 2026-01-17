@@ -1,11 +1,50 @@
 import support_functions.tailTab1_support_functions as tailTab1
 import support_functions.elecTab1_support_functions as elecTab1
+import support_functions.elecTab2_support_functions as elecTab2
+import support_functions.elecTab3_support_functions as elecTab3
 import support_functions.homepage_support_functions as homepage
 import support_functions.wingTab1_support_functions as wingTab1
 import support_functions.miscTab1_support_functions as miscTab1
 import support_functions.miscTab2_support_functions as miscTab2
 import support_functions.empty as empty
 from tkinter import *
+
+class ScrollableFrame(Frame):
+    '''A frame that can scroll its content if it exceeds the available space'''
+    def __init__(self, parent, bg="lightgray", **kwargs):
+        super().__init__(parent, bg=bg, **kwargs)
+        
+        # Create canvas and scrollbar
+        self.canvas = Canvas(self, bg=bg, highlightthickness=0)
+        scrollbar = Scrollbar(self, orient="vertical", command=self.canvas.yview)
+        self.scrollable_frame = Frame(self.canvas, bg=bg)
+        
+        self.scrollable_frame.bind(
+            "<Configure>",
+            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        )
+        
+        self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+        self.canvas.configure(yscrollcommand=scrollbar.set)
+        
+        # Pack the canvas and scrollbar
+        self.canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+        
+        # Bind mouse wheel scrolling
+        self.scrollable_frame.bind("<MouseWheel>", self._on_mousewheel)
+        self.scrollable_frame.bind("<Button-4>", self._on_mousewheel)
+        self.scrollable_frame.bind("<Button-5>", self._on_mousewheel)
+    
+    def _on_mousewheel(self, event):
+        if event.num == 5 or event.delta < 0:
+            self.canvas.yview_scroll(1, "units")
+        elif event.num == 4 or event.delta > 0:
+            self.canvas.yview_scroll(-1, "units")
+    
+    def get_scrollable_frame(self):
+        '''Returns the frame where widgets should be placed'''
+        return self.scrollable_frame
 
 class GeneralWindowFunctions:
     def __init__(self, tabControl, windowDimensions: tuple[int], colorSelection: str,
@@ -57,11 +96,14 @@ class GeneralWindowFunctions:
         self.activateButtonColor(currBtn)
 
     def addTab(self, tabClass, tabName: str) -> Frame:
-        newTab = Frame(self.tabControl, width=self.windowWidth, height=self.windowHeight, bg=self.colorSelection)
+        newTab = ScrollableFrame(self.tabControl, bg=self.colorSelection)
         self.openTabs.append(newTab)
         self.tabControl.add(newTab, text=tabName, state=NORMAL)
-        self.tabControl.grid(column=len(self.openTabs), row=0, sticky='nsew')
-        return newTab
+        # Configure grid weights for responsive layout
+        newTab.rowconfigure(0, weight=1)
+        newTab.columnconfigure(0, weight=1)
+        # Return the scrollable frame for content placement
+        return newTab.get_scrollable_frame()
 
     def wingActivate(self) -> None:
         '''Display tabs for tail subteam calculators'''
@@ -92,6 +134,12 @@ class GeneralWindowFunctions:
 
         tab1 = self.addTab(elecTab1, "Thrust Plot Automation")
         elecTab1.constructTab(tab1, self.colorSelection, self.fontName)
+
+        tab2 = self.addTab(elecTab2, "Servo Torque Calculator")
+        elecTab2.constructTab(tab2, self.colorSelection, self.fontName)
+
+        tab3 = self.addTab(elecTab3, "Voltage Drop Calculator")
+        elecTab3.constructTab(tab3, self.colorSelection, self.fontName)
 
     def landgearActivate(self) -> None:
         '''Display landing gear calculators'''

@@ -70,6 +70,11 @@ class TailTab1:
 
     def constructTab(self) -> None:
         '''Creates all of the Tkinter widgets'''
+        # Configure grid weights for responsive layout
+        self.tab.rowconfigure(9, weight=1)  # Make output box expandable
+        self.tab.columnconfigure(0, weight=1)  # Left margin
+        self.tab.columnconfigure(3, weight=1)  # Right margin
+        
         #Creates dropdown menu
         options = ["Horizontal", "Vertical"]
         self.clicked.set("Horizontal")
